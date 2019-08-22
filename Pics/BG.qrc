@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>Voice-logo.png</file>
+  </qresource>
+  <qresource prefix="BG">
+    <file>13887.jpg</file>
+  </qresource>
+</RCC>
