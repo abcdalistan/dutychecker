@@ -12,6 +12,7 @@ class Ui_adminlogin(QMainWindow):
             query=("SELECT username, password FROM adminlogin")
             cur.execute(query)
             result = cur.fetchone()
+            # cur.fetchone() is a tuple => "example: ('warren', 'bufett')"
             if (username == result[0] and password == result[1]):
                 QMessageBox.about(self, 'Login', 'You successfully Logged In')
             elif (username=='' and password==''):
