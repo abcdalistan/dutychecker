@@ -7,14 +7,13 @@ class Ui_adminlogin(QMainWindow):
         conn = pymysql.connect('localhost', 'root', '', 'staffer')
         username=self.usernamebox.text()
         password=self.lineEdit_2.text()
-            
         with conn:
             cur=conn.cursor()
-            query=("SELECT*FROM adminlogin where username=%s and password=%s")
-            results=cur.execute(query,(username,password))
-            if ((cur.fetchall())):
+            query=("SELECT username, password FROM adminlogin")
+            cur.execute(query)
+            result = cur.fetchone()
+            if (username == result[0] and password == result[1]):
                 QMessageBox.about(self, 'Login', 'You successfully Logged In')
-                
             elif (username=='' and password==''):
                 QMessageBox.about(self, 'Warning!', "Please input username/password!")
             else:
