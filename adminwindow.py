@@ -130,7 +130,7 @@ class Ui_MainWindow(object):
         self.delbut_4.setText(_translate("MainWindow", "Update"))
         self.delbut_5.setText(_translate("MainWindow", "Refresh"))
 import BG_rc
-import Icon_rc
+#import Icon_rc
 
 
 if __name__ == "__main__":
