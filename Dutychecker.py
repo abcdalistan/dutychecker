@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
-from login import Ui_adminlogin
+from Login import Ui_adminlogin
 
 class Ui_DutyChecker(QMainWindow):
     def login(self):
@@ -43,7 +43,7 @@ class Ui_DutyChecker(QMainWindow):
         self.centralwidget.setObjectName("centralwidget")
         self.Logo = QtWidgets.QLabel(self.centralwidget)
         self.Logo.setGeometry(QtCore.QRect(270, 10, 271, 121))
-        self.Logo.setStyleSheet("image: url(:/newPrefix/Voice-logo.png)")
+        self.Logo.setStyleSheet("image: url('Pics/Voice-logo.png')")
         self.Logo.setText("")
         self.Logo.setObjectName("Logo")
         self.label = QtWidgets.QLabel(self.centralwidget)
