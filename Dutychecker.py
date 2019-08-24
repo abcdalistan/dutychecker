@@ -5,7 +5,7 @@ from Login import Ui_adminlogin
 
 class Ui_DutyChecker(QMainWindow):
     def login(self):
-        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
         #first_name=self.namebox.text()
             #last_name=self.lineEdit_3.text()

@@ -1,10 +1,17 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
+from adminwindow import Ui_MainWindow
 
 class Ui_adminlogin(QMainWindow):
+    def admin(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self.window)
+        self.window.show()
+
     def loginadmin(self):
-        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         username=self.usernamebox.text()
         password=self.lineEdit_2.text()
         with conn:
@@ -15,6 +22,7 @@ class Ui_adminlogin(QMainWindow):
             # cur.fetchone() is a tuple => "example: ('warren', 'bufett')"
             if (username == result[0] and password == result[1]):
                 QMessageBox.about(self, 'Login', 'You successfully Logged In')
+                self.admin()
             elif (username=='' and password==''):
                 QMessageBox.about(self, 'Warning!', "Please input username/password!")
             else:
