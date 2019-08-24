@@ -1,15 +1,24 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'adminwindow.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.0
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
-
+import pymysql
 class Ui_MainWindow(QMainWindow):
+    def viewDutyMonday(self):
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        with conn:
+            cur=conn.cursor()
+            query=("SELECT*FROM mondayduty")
+            cur.execute(query)
+            result = cur.fetchall()
+            for row in result:
+                self.addTable(row)
+            cur.close()
+
+    def addTable(self,columns):
+        rowPosition=self.tableWidget.rowCount()
+        self.tableWidget.insertRow(rowPosition)
+
+        for i, column in enumerate(columns):
+            self.tableWidget.setItem(rowPosition,i, QtWidgets.QTableWidgetItem(str(column)))
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 450)
@@ -112,6 +121,7 @@ class Ui_MainWindow(QMainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.daybox.setCurrentText(_translate("MainWindow", "Monday"))
         self.daybox.setItemText(0, _translate("MainWindow", "Monday"))
+        self.daybox.activated.connect(self.viewDutyMonday)
         self.daybox.setItemText(1, _translate("MainWindow", "Tuesday"))
         self.daybox.setItemText(2, _translate("MainWindow", "Wednesday"))
         self.daybox.setItemText(3, _translate("MainWindow", "Thursday"))
