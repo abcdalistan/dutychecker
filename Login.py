@@ -9,7 +9,9 @@ class Ui_adminlogin(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.window)
         self.window.show()
-
+        #self.window_ui.show() # .show() shows the self.admin_ui window
+        self.this_window.hide()
+        
     def loginadmin(self):
         conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         username=self.usernamebox.text()
@@ -29,6 +31,7 @@ class Ui_adminlogin(QMainWindow):
                 QMessageBox.about(self, 'Warning!', "Incorrect!")
 
     def setupUi(self, adminlogin):
+        self.this_window = adminlogin
         adminlogin.setObjectName("adminlogin")
         adminlogin.resize(422, 384)
         adminlogin.setMinimumSize(QtCore.QSize(422, 384))
