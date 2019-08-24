@@ -1,6 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
+from addwindow import Ui_addwindow
+from deletewindow import Ui_deletewindow
+from searchwindow import Ui_searchwindow
+
+
 class Ui_MainWindow(QMainWindow):
     def viewDutyMonday(self):
         conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
@@ -12,6 +17,22 @@ class Ui_MainWindow(QMainWindow):
             for row in result:
                 self.addTable(row)
             cur.close()
+    def addwindow(self):
+        self.addwindow = QtWidgets.QMainWindow()
+        self.ui = Ui_addwindow()
+        self.ui.setupUi(self.addwindow)
+        self.addwindow.show()
+
+    def deletewindow(self):
+        self.deletewindow = QtWidgets.QMainWindow()
+        self.ui = Ui_deletewindow()
+        self.ui.setupUi(self.deletewindow)
+        self.deletewindow.show()
+    def searchwindow(self):
+        self.searchwindow = QtWidgets.QMainWindow()
+        self.ui = Ui_searchwindow()
+        self.ui.setupUi(self.searchwindow)
+        self.searchwindow.show()
 
     def addTable(self,columns):
         rowPosition=self.tableWidget.rowCount()
@@ -41,11 +62,6 @@ class Ui_MainWindow(QMainWindow):
         self.daybox.addItem("")
         self.daybox.addItem("")
         self.daybox.addItem("")
-        self.Confirmbut = QtWidgets.QPushButton(self.frame)
-        self.Confirmbut.setGeometry(QtCore.QRect(40, 40, 75, 23))
-        self.Confirmbut.setStyleSheet("background-color: rgb(255, 255, 255);\n"
-"background-color: rgb(220, 220, 220);")
-        self.Confirmbut.setObjectName("Confirmbut")
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
         self.tableWidget.setEnabled(True)
         self.tableWidget.setGeometry(QtCore.QRect(170, 40, 621, 391))
@@ -86,28 +102,31 @@ class Ui_MainWindow(QMainWindow):
         self.addbut = QtWidgets.QPushButton(self.widget)
         self.addbut.setStyleSheet("background-color: rgb(226, 226, 226);")
         self.addbut.setObjectName("addbut")
+        self.addbut.clicked.connect(self.addwindow)
         self.horizontalLayout.addWidget(self.addbut)
         self.delbut = QtWidgets.QPushButton(self.widget)
         self.delbut.setStyleSheet("background-color: rgb(226, 226, 226);")
         self.delbut.setObjectName("delbut")
+        self.delbut.clicked.connect(self.deletewindow)
         self.horizontalLayout.addWidget(self.delbut)
-        self.delbut_2 = QtWidgets.QPushButton(self.widget)
-        self.delbut_2.setStyleSheet("background-color: rgb(226, 226, 226);")
-        self.delbut_2.setObjectName("delbut_2")
-        self.horizontalLayout.addWidget(self.delbut_2)
-        self.delbut_3 = QtWidgets.QPushButton(self.widget)
-        self.delbut_3.setStyleSheet("background-color: rgb(226, 226, 226);")
-        self.delbut_3.setObjectName("delbut_3")
-        self.horizontalLayout.addWidget(self.delbut_3)
+        self.searchbut = QtWidgets.QPushButton(self.widget)
+        self.searchbut.setStyleSheet("background-color: rgb(226, 226, 226);")
+        self.searchbut.setObjectName("searchbut")
+        self.searchbut.clicked.connect(self.searchwindow)
+        self.horizontalLayout.addWidget(self.searchbut)
+        self.viewbut = QtWidgets.QPushButton(self.widget)
+        self.viewbut.setStyleSheet("background-color: rgb(226, 226, 226);")
+        self.viewbut.setObjectName("viewbut")
+        self.horizontalLayout.addWidget(self.viewbut)
         self.horizontalLayout_2.addLayout(self.horizontalLayout)
-        self.delbut_4 = QtWidgets.QPushButton(self.widget)
-        self.delbut_4.setStyleSheet("background-color: rgb(226, 226, 226);")
-        self.delbut_4.setObjectName("delbut_4")
-        self.horizontalLayout_2.addWidget(self.delbut_4)
-        self.delbut_5 = QtWidgets.QPushButton(self.widget)
-        self.delbut_5.setStyleSheet("background-color: rgb(226, 226, 226);")
-        self.delbut_5.setObjectName("delbut_5")
-        self.horizontalLayout_2.addWidget(self.delbut_5)
+        self.updatebut = QtWidgets.QPushButton(self.widget)
+        self.updatebut.setStyleSheet("background-color: rgb(226, 226, 226);")
+        self.updatebut.setObjectName("updatebut")
+        self.horizontalLayout_2.addWidget(self.updatebut)
+        self.refreshbut = QtWidgets.QPushButton(self.widget)
+        self.refreshbut.setStyleSheet("background-color: rgb(226, 226, 226);")
+        self.refreshbut.setObjectName("refreshbut")
+        self.horizontalLayout_2.addWidget(self.refreshbut)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -126,7 +145,6 @@ class Ui_MainWindow(QMainWindow):
         self.daybox.setItemText(2, _translate("MainWindow", "Wednesday"))
         self.daybox.setItemText(3, _translate("MainWindow", "Thursday"))
         self.daybox.setItemText(4, _translate("MainWindow", "Friday"))
-        self.Confirmbut.setText(_translate("MainWindow", "Confirm"))
         self.tableWidget.setSortingEnabled(False)
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Time"))
@@ -134,10 +152,10 @@ class Ui_MainWindow(QMainWindow):
         item.setText(_translate("MainWindow", "Staffs"))
         self.addbut.setText(_translate("MainWindow", "Add"))
         self.delbut.setText(_translate("MainWindow", "Delete"))
-        self.delbut_2.setText(_translate("MainWindow", "Search"))
-        self.delbut_3.setText(_translate("MainWindow", "View"))
-        self.delbut_4.setText(_translate("MainWindow", "Update"))
-        self.delbut_5.setText(_translate("MainWindow", "Refresh"))
+        self.searchbut.setText(_translate("MainWindow", "Search"))
+        self.viewbut.setText(_translate("MainWindow", "View"))
+        self.updatebut.setText(_translate("MainWindow", "Update"))
+        self.refreshbut.setText(_translate("MainWindow", "Refresh"))
 import BG_rc
 #import Icon_rc
 
