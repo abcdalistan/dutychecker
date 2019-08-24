@@ -45,6 +45,7 @@ class Ui_DutyChecker(QMainWindow):
         self.Logo.setGeometry(QtCore.QRect(270, 10, 271, 121))
         self.Logo.setStyleSheet("image: url('Pics/Voice-logo.png')")
         self.Logo.setText("")
+        self.logo.setSizePolicy("Fixed","Fixed",0,0)
         self.Logo.setObjectName("Logo")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(280, 120, 251, 81))
@@ -146,6 +147,7 @@ class Ui_DutyChecker(QMainWindow):
         font.setWeight(50)
         self.namebox.setFont(font)
         self.namebox.setAutoFillBackground(False)
+        self.namebox.setReadOnly(True)
         self.namebox.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "font: 18pt \"Bebas Neue\";")
         self.namebox.setText("")
@@ -162,6 +164,7 @@ class Ui_DutyChecker(QMainWindow):
         self.coursebox.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "font: 18pt \"Bebas Neue\";")
         self.coursebox.setObjectName("coursebox")
+        self.coursebox.setReadOnly(True)
         self.positionbox = QtWidgets.QLineEdit(self.centralwidget)
         self.positionbox.setGeometry(QtCore.QRect(210, 300, 441, 31))
         font = QtGui.QFont()
@@ -171,6 +174,7 @@ class Ui_DutyChecker(QMainWindow):
         font.setItalic(False)
         font.setWeight(50)
         self.positionbox.setFont(font)
+        self.positionbox.setReadOnly(True)
         self.positionbox.setStyleSheet("background-color: rgb(255, 255, 255);\n"
 "font: 18pt \"Bebas Neue\";")
         self.positionbox.setObjectName("positionbox")
