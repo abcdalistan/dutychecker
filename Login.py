@@ -2,16 +2,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
 
-from adminwindow import Ui_MainWindow
+from adminwindow import Ui_MainWindow as adminWindow
 
 class Ui_adminlogin(QMainWindow):
     # Opens new window named adminWindow
     def adminWindow(self):
-        window_ui = QtWidgets.QMainWindow()
-        admin_ui = adWindow()
-        admin_ui.setupUi(window_ui)
-        window_ui.show()
-        self.this_window.hide()
+        self.window_ui = QtWidgets.QMainWindow()
+        self.admin_ui = adminWindow()
+        self.admin_ui.setupUi(self.window_ui)
+        self.window_ui.show() # .show() shows the self.admin_ui window
+        self.this_window.hide() # .hide() hides the current window
     def loginadmin(self):
         conn = pymysql.connect('localhost', 'root', '', 'staffer')
         username=self.usernamebox.text()
@@ -31,7 +31,7 @@ class Ui_adminlogin(QMainWindow):
                 QMessageBox.about(self, 'Warning!', "Incorrect!")
 
     def setupUi(self, adminlogin):
-        self.this_window = adminlogin
+        self.this_window = adminlogin # This variable lets the adminlogin be accessible inside the Ui_adminlogin class
         adminlogin.setObjectName("adminlogin")
         adminlogin.resize(422, 384)
         adminlogin.setMinimumSize(QtCore.QSize(422, 384))
