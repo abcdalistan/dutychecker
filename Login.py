@@ -4,6 +4,26 @@ import pymysql
 from adminwindow import Ui_MainWindow
 
 class Ui_adminlogin(QMainWindow):
+    def addAdmin(self):
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        username=self.usernamebox.text()
+        password=self.lineEdit_2.text()
+        with conn:
+            cur=conn.cursor()
+            query=("SELECT username, password FROM adminlogin")
+            cur.execute(query)
+            result = cur.fetchone()
+            # cur.fetchone() is a tuple => "example: ('warren', 'bufett')"
+            if (username == result[0] and password == result[1]):
+                QMessageBox.about(self, 'Warning!', 'Admin already exists')
+            elif (username=='' and password==''):
+                QMessageBox.about(self, 'Warning!', "Please input username/password!")
+            else:
+                cur.execute("INSERT INTO adminlogin (username,password)" "values('%s','%s')" % (''.join(username), ''.join(password)))
+                QMessageBox.about(self, 'Add Admin!', "Successfully added!")
+                conn.commit()
+                self.close()
+
     def admin(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindow()
@@ -22,7 +42,7 @@ class Ui_adminlogin(QMainWindow):
             cur.execute(query)
             result = cur.fetchone()
             # cur.fetchone() is a tuple => "example: ('warren', 'bufett')"
-            if (username == result[0] and password == result[1]):
+            if (username==result[0] or password==result[1]):
                 QMessageBox.about(self, 'Login', 'You successfully Logged In')
                 self.admin()
             elif (username=='' and password==''):
@@ -131,6 +151,7 @@ class Ui_adminlogin(QMainWindow):
         self.Signup = QtWidgets.QPushButton(self.layoutWidget2)
         self.Signup.setStyleSheet("background-color: rgb(195, 195, 195);")
         self.Signup.setObjectName("Signup")
+        self.Signup.clicked.connect(self.addAdmin)
         self.horizontalLayout_3.addWidget(self.Signup)
         self.layoutWidget.raise_()
         self.layoutWidget.raise_()
