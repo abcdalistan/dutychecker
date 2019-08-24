@@ -12,13 +12,16 @@ class Ui_adminlogin(QMainWindow):
             cur=conn.cursor()
             query=("SELECT username, password FROM adminlogin")
             cur.execute(query)
-            result = cur.fetchone()
+            result = tuple(cur.fetchall()) # EXAMPLE OUTPUT: (('zeusjames', '12345'), ('ironman', '3000'))
+            accounts = {}
+            for account_number in range(0, len(result)):
+                    accounts[result[account_number][0]] = result[account_number]
             # cur.fetchone() is a tuple => "example: ('warren', 'bufett')"
-            if (username == result[0] and password == result[1]):
-                QMessageBox.about(self, 'Warning!', 'Admin already exists')
+            if (username in accounts and password == accounts[username][1]):
+                    QMessageBox.about(self, 'Warning', 'Admin already exists')
             elif (username=='' and password==''):
-                QMessageBox.about(self, 'Warning!', "Please input username/password!")
-            else:
+                    QMessageBox.about(self, 'Warning!', "Please input username/password!")
+            else: 
                 cur.execute("INSERT INTO adminlogin (username,password)" "values('%s','%s')" % (''.join(username), ''.join(password)))
                 QMessageBox.about(self, 'Add Admin!', "Successfully added!")
                 conn.commit()
@@ -33,23 +36,50 @@ class Ui_adminlogin(QMainWindow):
         self.this_window.hide()
         
     def loginadmin(self):
-        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
-        username=self.usernamebox.text()
-        password=self.lineEdit_2.text()
-        with conn:
-            cur=conn.cursor()
-            query=("SELECT username, password FROM adminlogin")
-            cur.execute(query)
-            result = cur.fetchone()
-            # cur.fetchone() is a tuple => "example: ('warren', 'bufett')"
-            if (username==result[0] or password==result[1]):
-                QMessageBox.about(self, 'Login', 'You successfully Logged In')
-                self.admin()
-            elif (username=='' and password==''):
-                QMessageBox.about(self, 'Warning!', "Please input username/password!")
-            else:
-                QMessageBox.about(self, 'Warning!', "Incorrect!")
+            conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+            username=self.usernamebox.text()
+            password=self.lineEdit_2.text()
+            with conn:
+            # Let's say you already have values in the adminlogin table
+            #
+            # Example values:
+            #
+            #  ------------------------------
+            #  |         adminlogin         |      <-- TABLE NAME
+            #  ------------------------------
+            #  |  username    |   password  |      <-- COLUMNS
+            #  ------------------------------
+            #  |  zeusjames   |   12345     |      <-- FIRST ROW
+            #  |  iron man    |   3000      |      <-- SECOND ROW
+            #  ------------------------------
+            #
+                cur=conn.cursor()
+                query=("SELECT username, password FROM adminlogin")
+                cur.execute(query)
+                result = tuple(cur.fetchall()) # EXAMPLE OUTPUT: (('zeusjames', '12345'), ('ironman', '3000'))
+                accounts = {} # Holds accounts as a dictionary
 
+            # This for-loop statement organizes the values obtained by the "result" and pass it to "accounts"
+            # To make the dictionary understandable, this is the output {<username>: ('<username>':<password>)} or
+            # accounts = {value: tuple(value, value)}
+            # NOTE: tuple is just like a list () = []
+            # Example Output: {'zeusjames': ('zeusjames', '12345'), 'ironman': ('ironman', '3000')}
+                for account_number in range(0, len(result)):
+                    accounts[result[account_number][0]] = result[account_number]
+                # Example:
+                #   result[0][0] is 'zeusjames'
+                #   result[0] is ('zeusjames', '12345')
+                #   accounts['zeusjames']  = ('zeusjames', '12345')
+                
+            # If the username is in accounts and password is in accounts[username][1], then proceed
+            # Example condition: If "zeusjames" is in accounts and password is in accounts["zeusjames"][1], then proceed
+                if (username in accounts and password == accounts[username][1]):
+                    QMessageBox.about(self, 'Login', 'You successfully Logged In')
+                    self.admin()
+                elif (username=='' and password==''):
+                    QMessageBox.about(self, 'Warning!', "Please input username/password!")
+                else: 
+                    QMessageBox.about(self, 'Warning!', "Incorrect!")
     def setupUi(self, adminlogin):
         self.this_window = adminlogin
         adminlogin.setObjectName("adminlogin")
@@ -146,7 +176,6 @@ class Ui_adminlogin(QMainWindow):
         self.Adminlogin.setStyleSheet("background-color: rgb(195, 195, 195);")
         self.Adminlogin.setObjectName("Adminlogin")
         self.Adminlogin.clicked.connect(self.loginadmin)
-        
         self.horizontalLayout_3.addWidget(self.Adminlogin)
         self.Signup = QtWidgets.QPushButton(self.layoutWidget2)
         self.Signup.setStyleSheet("background-color: rgb(195, 195, 195);")
