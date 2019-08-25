@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
+from administrators import display # This module displays the existing administrators, this is optional
 import pymysql
-
 from adminwindow import Ui_MainWindow as adminWindow
 
 class Ui_adminlogin(QMainWindow):
@@ -17,12 +17,40 @@ class Ui_adminlogin(QMainWindow):
         username=self.usernamebox.text()
         password=self.lineEdit_2.text()
         with conn:
+            # Let's say you already have values in the adminlogin table
+            #
+            # Example values:
+            #
+            #  ------------------------------
+            #  |         adminlogin         |      <-- TABLE NAME
+            #  ------------------------------
+            #  |  username    |   password  |      <-- COLUMNS
+            #  ------------------------------
+            #  |  zeusjames   |   12345     |      <-- FIRST ROW
+            #  |  iron man    |   3000      |      <-- SECOND ROW
+            #  ------------------------------
+            #
             cur=conn.cursor()
             query=("SELECT username, password FROM adminlogin")
             cur.execute(query)
-            result = cur.fetchone()
-            # cur.fetchone() is a tuple => "example: ('warren', 'bufett')"
-            if (username == result[0] and password == result[1]):
+            result = tuple(cur.fetchall()) # EXAMPLE OUTPUT: (('zeusjames', '12345'), ('ironman', '3000'))
+            accounts = {} # Holds accounts as a dictionary
+
+            # This for-loop statement organizes the values obtained by the "result" and pass it to "accounts"
+            # To make the dictionary understandable, this is the output {<username>: ('<username>':<password>)} or
+            # accounts = {value: tuple(value, value)}
+            # NOTE: tuple is just like a list () = []
+            # Example Output: {'zeusjames': ('zeusjames', '12345'), 'ironman': ('ironman', '3000')}
+            for account_number in range(0, len(result)):
+                accounts[result[account_number][0]] = result[account_number]
+                # Example:
+                #   result[0][0] is 'zeusjames'
+                #   result[0] is ('zeusjames', '12345')
+                #   accounts['zeusjames']  = ('zeusjames', '12345')
+                
+            # If the username is in accounts and password is in accounts[username][1], then proceed
+            # Example condition: If "zeusjames" is in accounts and password is in accounts["zeusjames"][1], then proceed
+            if (username in accounts and password == accounts[username][1]):
                 QMessageBox.about(self, 'Login', 'You successfully Logged In')
                 self.adminWindow()
             elif (username=='' and password==''):
@@ -31,6 +59,7 @@ class Ui_adminlogin(QMainWindow):
                 QMessageBox.about(self, 'Warning!', "Incorrect!")
 
     def setupUi(self, adminlogin):
+        display() # Calls the function from the administrators module
         self.this_window = adminlogin # This variable lets the adminlogin be accessible inside the Ui_adminlogin class
         adminlogin.setObjectName("adminlogin")
         adminlogin.resize(422, 384)
