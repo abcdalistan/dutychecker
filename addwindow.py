@@ -6,11 +6,39 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
+import pymysql
 
+class Ui_addwindow(QMainWindow):
+    def addStaffer(self):
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        student_number=self.idbox.text()
+        first_name=self.fnamebox.text()
+        last_name=self.lnamebox.text()
+        program=self.cbox.text()
+        position=self.posbox.text()
+        with conn:
+            cur=conn.cursor()
+            query=("SELECT*FROM stafferinfo")
+            cur.execute(query)
+            result = tuple(cur.fetchall())
+            accounts = {}
+            for account_number in range(0, len(result)):
+                accounts[result[account_number][0]] = result[account_number]
+            if (student_number in accounts and first_name== accounts[student_number][1] and last_name==accounts[student_number][2] and program==accounts[student_number][3] and position==accounts[student_number][4]):
+                QMessageBox.about(self, 'Warning', 'Staffer already exists')
+            elif (student_number=='' or first_name=='' or last_name=='' or program=='' or position==''):
+                QMessageBox.about(self, 'Warning!', "Please fill up all information")
+                conn.commit()
+            else:
+                query=("INSERT INTO stafferinfo(student_number,first_name,last_name,program,position) values(%s,%s,%s,%s,%s)")
+                #query=("INSERT INTO stafferinfo(student_number,first_name,last_name,program,position)" % "values('%s','%s','%s','%s','%s')"(''.join(student_number),''.join(first_name),''.join(last_name),''.join(program),''.join(position),))
+                value=(student_number,first_name,last_name,program,position)
+                cur.execute(query,value)
+                QMessageBox.about(self, 'Add Staffer!', "Successfully Added the staffer!")
+                conn.commit()
 
-class Ui_addwindow(object):
     def setupUi(self, addwindow):
         addwindow.setObjectName("addwindow")
         addwindow.resize(329, 210)
@@ -23,6 +51,7 @@ class Ui_addwindow(object):
         self.pushButton.setGeometry(QtCore.QRect(120, 170, 75, 23))
         self.pushButton.setStyleSheet("background-color: rgb(226, 226, 226);")
         self.pushButton.setObjectName("pushButton")
+        self.pushButton.clicked.connect(self.addStaffer)
         self.layoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.layoutWidget.setGeometry(QtCore.QRect(10, 10, 301, 31))
         self.layoutWidget.setObjectName("layoutWidget")
