@@ -8,9 +8,34 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
+import pymysql
 
+class Ui_deletewindow(QMainWindow):
+    def deleteStaffer(self):
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        name=self.delnamebox.text()
+        with conn:
+            cur=conn.cursor()
+            #query=("SELECT*, concat(first_name,'',last_name) as name from stafferinfo")
+            query="SELECT first_name, last_name from stafferinfo"
+            cur.execute(query)
+            #result = 
+            #if (name in accounts):
+                    #query=("DELETE FROM stafferinfo where first_name='%s' or last_name='%s'")
+                    #cur.execute(query)
+                    #
+            if (name==''):
+                    QMessageBox.about(self, 'Warning!', "Please input name!")
+            elif(tuple(cur.fetchall())):
+                query1=("DELETE FROM stafferinfo where last_name=%s")
+                cur.execute(query1,name)
+                QMessageBox.about(self, 'Delete staffer', 'Successfully deleted the staffer!')
+            else: 
+                QMessageBox.about(self, 'Warning!', "Staffer doesn't exists!")
+                conn.commit()
+                self.close()
 
-class Ui_deletewindow(object):
     def setupUi(self, deletewindow):
         deletewindow.setObjectName("deletewindow")
         deletewindow.resize(345, 110)
@@ -28,6 +53,7 @@ class Ui_deletewindow(object):
         self.delconfirm.setGeometry(QtCore.QRect(130, 70, 75, 23))
         self.delconfirm.setStyleSheet("background-color: rgb(225, 225, 225);")
         self.delconfirm.setObjectName("delconfirm")
+        self.delconfirm.clicked.connect(self.deleteStaffer)
         self.widget = QtWidgets.QWidget(self.centralwidget)
         self.widget.setGeometry(QtCore.QRect(10, 20, 321, 41))
         self.widget.setObjectName("widget")
