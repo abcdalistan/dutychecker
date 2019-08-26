@@ -1,44 +1,38 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'addwindow.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.0
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
 
 class Ui_addwindow(QMainWindow):
     def addStaffer(self):
-        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
-        student_number=self.idbox.text()
-        first_name=self.fnamebox.text()
-        last_name=self.lnamebox.text()
-        program=self.cbox.text()
-        position=self.posbox.text()
+        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        student_number = self.idbox.text()
+        first_name = self.fnamebox.text()
+        last_name = self.lnamebox.text()
+        program = self.cbox.text()
+        position = self.posbox.text()
+        if (student_number=='' or first_name=='' or last_name=='' or program=='' or position==''):
+            QMessageBox.about(self, 'Warning!', "Please fill up all information")
+            return
         with conn:
-            cur=conn.cursor()
-            query=("SELECT*FROM stafferinfo")
+            cur = conn.cursor()
+            query = "SELECT * FROM stafferinfo;"
             cur.execute(query)
             result = tuple(cur.fetchall())
             accounts = {}
             for account_number in range(0, len(result)):
                 accounts[result[account_number][0]] = result[account_number]
-            if (student_number in accounts and first_name== accounts[student_number][1] and last_name==accounts[student_number][2] and program==accounts[student_number][3] and position==accounts[student_number][4]):
-                QMessageBox.about(self, 'Warning', 'Staffer already exists')
-            elif (student_number=='' or first_name=='' or last_name=='' or program=='' or position==''):
-                QMessageBox.about(self, 'Warning!', "Please fill up all information")
-                conn.commit()
+            # ISSUE: Find and fix the possible issues for these conditions (If any)
+            if (student_number in accounts):
+                if (first_name == accounts[student_number][1] and last_name == accounts[student_number][2] and program == accounts[student_number][3] and position == accounts[student_number][4]):
+                    QMessageBox.about(self, 'Warning', 'Staffer already exist!')
+                else:
+                    QMessageBox.about(self, 'Warning', 'Staffer already exist!')
             else:
-                query=("INSERT INTO stafferinfo(student_number,first_name,last_name,program,position) values(%s,%s,%s,%s,%s)")
-                #query=("INSERT INTO stafferinfo(student_number,first_name,last_name,program,position)" % "values('%s','%s','%s','%s','%s')"(''.join(student_number),''.join(first_name),''.join(last_name),''.join(program),''.join(position),))
-                value=(student_number,first_name,last_name,program,position)
-                cur.execute(query,value)
+                query = "INSERT INTO stafferinfo values (\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\")".format(student_number, first_name, last_name, program, position)
+                cur.execute(query)
                 QMessageBox.about(self, 'Add Staffer!', "Successfully Added the staffer!")
                 conn.commit()
-
+        return
     def setupUi(self, addwindow):
         addwindow.setObjectName("addwindow")
         addwindow.resize(329, 210)
@@ -141,7 +135,7 @@ class Ui_addwindow(QMainWindow):
 
         self.retranslateUi(addwindow)
         QtCore.QMetaObject.connectSlotsByName(addwindow)
-
+        return
     def retranslateUi(self, addwindow):
         _translate = QtCore.QCoreApplication.translate
         addwindow.setWindowTitle(_translate("addwindow", "MainWindow"))
@@ -151,6 +145,7 @@ class Ui_addwindow(QMainWindow):
         self.label_3.setText(_translate("addwindow", "Position:          "))
         self.label_.setText(_translate("addwindow", "Last Name:  "))
         self.label_5.setText(_translate("addwindow", "Course:               "))
+        return
 
 
 if __name__ == "__main__":
