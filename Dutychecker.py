@@ -8,6 +8,7 @@ class Ui_DutyChecker(QMainWindow):
         self.namebox.setText("")
         self.coursebox.setText("")
         self.positionbox.setText("")
+        
     def login(self):
         conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
