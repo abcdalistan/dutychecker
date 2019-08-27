@@ -4,22 +4,38 @@ import pymysql
 from Login import Ui_adminlogin
 
 class Ui_DutyChecker(QMainWindow):
+    def clear(self):
+        self.namebox.setText("")
+        self.coursebox.setText("")
+        self.positionbox.setText("")
     def login(self):
         conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
-        #first_name=self.namebox.text()
-            #last_name=self.lineEdit_3.text()
-            #position=self.lineEdit_4.text()
         with conn:
             cur=conn.cursor()
-            query=("SELECT*FROM stafferinfo where student_number=%s")
-            data=cur.execute(query,(student_number))
-            if (cur.fetchall()):
-                QMessageBox.about(self, 'Login', 'You successfully Logged In')
-            elif(student_number==""):
-                QMessageBox.about(self, 'Warning!', 'Please input student number.')
+            query = "SELECT * FROM stafferinfo"
+            cur.execute(query)
+            result = cur.fetchall()
+            accounts = {}
+            for account_number in range(0, len(result)):
+                accounts[result[account_number][0]] = result[account_number]
+            if (student_number in accounts):
+                query = "SELECT * FROM stafferinfo where student_number= \"{}\"".format(student_number)
+                cur.execute(query)
+                result = cur.fetchone()
+                self.namebox.setText(" ".join([result[1], result[2]]))
+                self.coursebox.setText(result[3])
+                self.positionbox.setText(result[4])
+                QMessageBox.about(self, "Login", "Successfully logged in!")  
+            elif (self.idbox.text() == ""):
+                QMessageBox.about(self, "Empty", "Input student number")
+                self.clear()
+            elif (self.idbox.text().isalpha()):
+                QMessageBox.about(self, "Numbers only", "Positive integer numbers only")
+                self.clear()
             else:
-                QMessageBox.about(self, 'Warning!', "Staffer doesn't exist")
+                QMessageBox.about(self, "Does not exist", "Student number does not exist")
+                self.clear()
                 
     def adminwindow(self):
         self.window = QtWidgets.QMainWindow()
