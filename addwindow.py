@@ -4,7 +4,7 @@ import pymysql
 
 class Ui_addwindow(QMainWindow):
     def addStaffer(self):
-        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number = self.idbox.text()
         first_name = self.fnamebox.text()
         last_name = self.lnamebox.text()
