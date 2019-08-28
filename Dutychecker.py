@@ -28,6 +28,7 @@ class Ui_DutyChecker(QMainWindow):
                 self.coursebox.setText(result[3])
                 self.positionbox.setText(result[4])
                 QMessageBox.about(self, "Login", "Successfully logged in!")  
+                self.currentTable()
             elif (self.idbox.text() == ""):
                 QMessageBox.about(self, "Empty", "Input student number")
                 self.clear()
@@ -37,7 +38,6 @@ class Ui_DutyChecker(QMainWindow):
             else:
                 QMessageBox.about(self, "Does not exist", "Student number does not exist")
                 self.clear()
-                
     def adminwindow(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_adminlogin()

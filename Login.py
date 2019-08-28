@@ -16,7 +16,6 @@ class Ui_adminlogin(QMainWindow):
             accounts = {}
             for account_number in range(0, len(result)):
                     accounts[result[account_number][0]] = result[account_number]
-            # cur.fetchone() is a tuple => "example: ('warren', 'bufett')"
             if (username in accounts and password == accounts[username][1]):
                     QMessageBox.about(self, 'Warning', 'Admin already exists')
             elif (username=='' and password==''):
@@ -80,6 +79,7 @@ class Ui_adminlogin(QMainWindow):
                     QMessageBox.about(self, 'Warning!', "Please input username/password!")
                 else: 
                     QMessageBox.about(self, 'Warning!', "Incorrect!")
+
     def setupUi(self, adminlogin):
         self.this_window = adminlogin
         adminlogin.setObjectName("adminlogin")

@@ -1,12 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'deletewindow.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.0
-#
-# WARNING! All changes made in this file will be lost!
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
@@ -16,25 +7,23 @@ class Ui_deletewindow(QMainWindow):
         conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         name=self.delnamebox.text()
         with conn:
-            cur=conn.cursor()
-            #query=("SELECT*, concat(first_name,'',last_name) as name from stafferinfo")
-            query="SELECT first_name, last_name from stafferinfo"
+            cur = conn.cursor()
+            query = "SELECT * FROM stafferinfo;"
             cur.execute(query)
-            #result = 
-            #if (name in accounts):
-                    #query=("DELETE FROM stafferinfo where first_name='%s' or last_name='%s'")
-                    #cur.execute(query)
-                    #
-            if (name==''):
-                    QMessageBox.about(self, 'Warning!', "Please input name!")
-            elif(tuple(cur.fetchall())):
-                query1=("DELETE FROM stafferinfo where last_name=%s")
-                cur.execute(query1,name)
-                QMessageBox.about(self, 'Delete staffer', 'Successfully deleted the staffer!')
-            else: 
-                QMessageBox.about(self, 'Warning!', "Staffer doesn't exists!")
+            result = tuple(cur.fetchall())
+            accounts = {}
+            for account_number in range(0, len(result)):
+                accounts[result[account_number][0]] = result[account_number]
+            if (name in accounts):
+                query = "DELETE FROM stafferinfo where last_name= \"{}\"".format(name)
+                cur.execute(query)
+               # result = cur.fetchone()
+                QMessageBox.about(self, 'Delete', 'Successfully deleted the staffer!')
+            elif (name==""):
+                QMessageBox.about(self, 'Warning!', "Please input name!")
+            else:
+                QMessageBox.about(self, 'Warning!', "Staffer doesn't exist!")
                 conn.commit()
-                self.close()
 
     def setupUi(self, deletewindow):
         deletewindow.setObjectName("deletewindow")
