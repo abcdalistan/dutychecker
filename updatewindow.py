@@ -1,17 +1,40 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'updatewindow.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.0
-#
-# WARNING! All changes made in this file will be lost!
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
+import pymysql
 
-
-class Ui_updatewindow(object):
+class Ui_updatewindow(QMainWindow):
+    def insertData(self, cell_student_number):
+        conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
+        cur = conn.cursor()
+        query = "SELECT * FROM stafferinfo"
+        cur.execute(query)
+        result = cur.fetchall()
+        accounts = {}
+        for account_number in range(0, len(result)):
+            accounts[result[account_number][0]] = result[account_number]
+        for student_number in accounts:
+            if (student_number == cell_student_number):
+                self.idbox.setText(accounts[student_number][0])
+                self.fnamebox.setText(accounts[student_number][1])
+                self.lnamebox.setText(accounts[student_number][2])
+                self.posbox.setText(accounts[student_number][4])
+                self.cbox.setText(accounts[student_number][3])
+                break
+        self.cell_student_number = cell_student_number
+    def updateData(self):
+        conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
+        cur = conn.cursor()
+        fname = self.fnamebox.text()
+        lname = self.lnamebox.text()
+        posbox = self.posbox.text()
+        cbox = self.cbox.text()
+        selected_account = [fname, lname, cbox, posbox, self.cell_student_number]
+        query = "UPDATE stafferinfo SET first_name=\"{0}\", last_name=\"{1}\", program=\"{2}\", position=\"{3}\" WHERE student_number = \"{4}\"".format(*selected_account)
+        QMessageBox.about(self, "Updated", "Updated!")
+        cur.execute(query)
+        conn.commit()
     def setupUi(self, updatewindow):
+        self.updatewindow = updatewindow
         updatewindow.setObjectName("updatewindow")
         updatewindow.resize(329, 210)
         updatewindow.setMinimumSize(QtCore.QSize(329, 210))
@@ -20,6 +43,7 @@ class Ui_updatewindow(object):
         self.centralwidget = QtWidgets.QWidget(updatewindow)
         self.centralwidget.setObjectName("centralwidget")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.clicked.connect(self.updateData)
         self.pushButton.setGeometry(QtCore.QRect(120, 160, 75, 23))
         self.pushButton.setStyleSheet("background-color: rgb(226, 226, 226);")
         self.pushButton.setObjectName("pushButton")
