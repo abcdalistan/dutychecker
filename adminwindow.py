@@ -1,5 +1,7 @@
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
+<<<<<<< HEAD
 import pymysql
 from addwindow import Ui_addwindow
 from deletewindow import Ui_deletewindow
@@ -8,11 +10,12 @@ from searchwindow import Ui_searchwindow
 class Ui_MainWindow(QMainWindow):
     def cell_was_clicked(self, row, column):
         self.row = row
+=======
+>>>>>>> 412bede9e412e62cd46f6ab7034f1ee6ab916fcb
 
-    def addTable(self,columns):
-        rowPosition=self.tableWidget.rowCount()
-        self.tableWidget.insertRow(rowPosition)
+from viewwindow import Ui_MainWindow as viewwindow
 
+<<<<<<< HEAD
         for i, column in enumerate(columns):
             self.tableWidget.setItem(rowPosition,i, QtWidgets.QTableWidgetItem(str(column)))
 
@@ -41,6 +44,16 @@ class Ui_MainWindow(QMainWindow):
         self.ui = Ui_searchwindow()
         self.ui.setupUi(self.searchwindow)
         self.searchwindow.show()
+=======
+class Ui_MainWindow(QMainWindow):
+
+    def viewwindow(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = viewwindow()
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.MainWindow.hide()
+>>>>>>> 412bede9e412e62cd46f6ab7034f1ee6ab916fcb
 
     # Don't mind about the decorator '@QtCore.pyqtSlot()'
     @QtCore.pyqtSlot()
@@ -63,7 +76,10 @@ class Ui_MainWindow(QMainWindow):
             return
 
     def setupUi(self, MainWindow):
+<<<<<<< HEAD
         self.flag = 1
+=======
+>>>>>>> 412bede9e412e62cd46f6ab7034f1ee6ab916fcb
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 450)
@@ -120,7 +136,6 @@ class Ui_MainWindow(QMainWindow):
         self.addbut = QtWidgets.QPushButton(self.layoutWidget)
         self.addbut.setStyleSheet("background-color: rgb(226, 226, 226);")
         self.addbut.setObjectName("addbut")
-        self.addbut.clicked.connect(self.addwindow)
         self.horizontalLayout.addWidget(self.addbut)
         self.delbut = QtWidgets.QPushButton(self.layoutWidget)
         self.delbut.clicked.connect(self.deleteClicked) # <--------- DELETE BUTTON FUNCTION
@@ -134,6 +149,7 @@ class Ui_MainWindow(QMainWindow):
         self.viewbut = QtWidgets.QPushButton(self.layoutWidget)
         self.viewbut.setStyleSheet("background-color: rgb(226, 226, 226);")
         self.viewbut.setObjectName("viewbut")
+        self.viewbut.clicked.connect(self.viewwindow)
         self.horizontalLayout.addWidget(self.viewbut)
         self.horizontalLayout_2.addLayout(self.horizontalLayout)
         self.updatebut = QtWidgets.QPushButton(self.layoutWidget)
@@ -147,7 +163,6 @@ class Ui_MainWindow(QMainWindow):
         self.displaybut = QtWidgets.QPushButton(self.layoutWidget)
         self.displaybut.setStyleSheet("background-color: rgb(226, 226, 226);")
         self.displaybut.setObjectName("displaybut")
-        self.displaybut.clicked.connect(self.viewStaffer)
         self.horizontalLayout_2.addWidget(self.displaybut)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)

@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
 from Login import Ui_adminlogin
 
+        
 class Ui_DutyChecker(QMainWindow):
     def clear(self):
         self.namebox.setText("")
@@ -266,8 +267,7 @@ class Ui_DutyChecker(QMainWindow):
         self.namebox.raise_()
         self.coursebox.raise_()
         self.positionbox.raise_()
-        self.Time.raise_()
-        self.date.raise_()
+
         self.layoutWidget.raise_()
         DutyChecker.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(DutyChecker)
