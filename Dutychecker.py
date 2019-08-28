@@ -29,7 +29,6 @@ class Ui_DutyChecker(QMainWindow):
                 self.coursebox.setText(result[3])
                 self.positionbox.setText(result[4])
                 QMessageBox.about(self, "Login", "Successfully logged in!")  
-                self.currentTable()
             elif (self.idbox.text() == ""):
                 QMessageBox.about(self, "Empty", "Input student number")
                 self.clear()
