@@ -121,13 +121,8 @@ class Ui_searchwindow(QMainWindow):
         self.cbox.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.cbox.setObjectName("cbox")
         self.horizontalLayout_5.addWidget(self.cbox)
-<<<<<<< HEAD
         searchwindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(searchwindow)
-=======
-        updatewindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(updatewindow)
->>>>>>> 0346d952293a303f237921ed090e1b31a216ac49
         self.statusbar.setObjectName("statusbar")
         searchwindow.setStatusBar(self.statusbar)
 
@@ -136,7 +131,6 @@ class Ui_searchwindow(QMainWindow):
 
     def retranslateUi(self, searchwindow):
         _translate = QtCore.QCoreApplication.translate
-<<<<<<< HEAD
         searchwindow.setWindowTitle(_translate("searchwindow", "MainWindow"))
         self.pushButton.setText(_translate("searchwindow", "Confirm"))
         self.firstname.setText(_translate("searchwindow", "first Name:"))
@@ -144,15 +138,6 @@ class Ui_searchwindow(QMainWindow):
         self.position.setText(_translate("searchwindow", "Position:          "))
         self.lastname.setText(_translate("searchwindow", "Last Name:  "))
         self.course.setText(_translate("searchwindow", "Course:               "))
-=======
-        updatewindow.setWindowTitle(_translate("updatewindow", "MainWindow"))
-        self.pushButton.setText(_translate("updatewindow", "Confirm"))
-        self.firstname.setText(_translate("updatewindow", "first Name:"))
-        self.studentid.setText(_translate("updatewindow", "Student ID: "))
-        self.position.setText(_translate("updatewindow", "Position:          "))
-        self.lastname.setText(_translate("updatewindow", "Last Name:  "))
-        self.course.setText(_translate("updatewindow", "Course:               "))
->>>>>>> 0346d952293a303f237921ed090e1b31a216ac49
 
 
 if __name__ == "__main__":
