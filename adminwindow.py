@@ -1,53 +1,20 @@
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
-import pymysql
-from addwindow import Ui_addwindow
-from deletewindow import Ui_deletewindow
-from searchwindow import Ui_searchwindow
+
+from viewwindow import Ui_MainWindow as viewwindow
 
 class Ui_MainWindow(QMainWindow):
-    def cell_was_clicked(self, row, column):
-        #print("Row %d and Column %d was clicked" % (row, column))
-        item = self.tableWidget.item(row, column)
-        print(row+1)
 
-    def addTable(self,columns):
-        rowPosition=self.tableWidget.rowCount()
-        self.tableWidget.insertRow(rowPosition)
-
-        for i, column in enumerate(columns):
-            self.tableWidget.setItem(rowPosition,i, QtWidgets.QTableWidgetItem(str(column)))
-
-    def viewStaffer(self):
-        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
-        with conn:
-            cur=conn.cursor()
-            query=("SELECT * FROM stafferinfo")
-            cur.execute(query)
-            result = cur.fetchall()
-            for row in result:
-                self.addTable(row)
-            cur.close()
-            
-    def addwindow(self):
-        self.addwindow = QtWidgets.QMainWindow()
-        self.ui = Ui_addwindow()
-        self.ui.setupUi(self.addwindow)
-        self.addwindow.show()
-
-    def deletewindow(self):
-        self.deletewindow = QtWidgets.QMainWindow()
-        self.ui = Ui_deletewindow()
-        self.ui.setupUi(self.deletewindow)
-        self.deletewindow.show()
-
-    def searchwindow(self):
-        self.searchwindow = QtWidgets.QMainWindow()
-        self.ui = Ui_searchwindow()
-        self.ui.setupUi(self.searchwindow)
-        self.searchwindow.show()
+    def viewwindow(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = viewwindow()
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.MainWindow.hide()
 
     def setupUi(self, MainWindow):
+        self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 450)
         MainWindow.setMinimumSize(QtCore.QSize(800, 450))
@@ -102,12 +69,10 @@ class Ui_MainWindow(QMainWindow):
         self.addbut = QtWidgets.QPushButton(self.layoutWidget)
         self.addbut.setStyleSheet("background-color: rgb(226, 226, 226);")
         self.addbut.setObjectName("addbut")
-        self.addbut.clicked.connect(self.addwindow)
         self.horizontalLayout.addWidget(self.addbut)
         self.delbut = QtWidgets.QPushButton(self.layoutWidget)
         self.delbut.setStyleSheet("background-color: rgb(226, 226, 226);")
         self.delbut.setObjectName("delbut")
-        self.delbut.clicked.connect(self.deletewindow)
         self.horizontalLayout.addWidget(self.delbut)
         self.searchbut = QtWidgets.QPushButton(self.layoutWidget)
         self.searchbut.setStyleSheet("background-color: rgb(226, 226, 226);")
@@ -116,6 +81,7 @@ class Ui_MainWindow(QMainWindow):
         self.viewbut = QtWidgets.QPushButton(self.layoutWidget)
         self.viewbut.setStyleSheet("background-color: rgb(226, 226, 226);")
         self.viewbut.setObjectName("viewbut")
+        self.viewbut.clicked.connect(self.viewwindow)
         self.horizontalLayout.addWidget(self.viewbut)
         self.horizontalLayout_2.addLayout(self.horizontalLayout)
         self.updatebut = QtWidgets.QPushButton(self.layoutWidget)
@@ -129,7 +95,6 @@ class Ui_MainWindow(QMainWindow):
         self.displaybut = QtWidgets.QPushButton(self.layoutWidget)
         self.displaybut.setStyleSheet("background-color: rgb(226, 226, 226);")
         self.displaybut.setObjectName("displaybut")
-        self.displaybut.clicked.connect(self.viewStaffer)
         self.horizontalLayout_2.addWidget(self.displaybut)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
