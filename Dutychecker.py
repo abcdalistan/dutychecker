@@ -1,7 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
-from Login import Ui_adminlogin
+#from Login import Ui_adminlogin
+from datetime import datetime
 
         
 class Ui_DutyChecker(QMainWindow):
@@ -28,7 +29,7 @@ class Ui_DutyChecker(QMainWindow):
                 self.namebox.setText(" ".join([result[1], result[2]]))
                 self.coursebox.setText(result[3])
                 self.positionbox.setText(result[4])
-                QMessageBox.about(self, "Login", "Successfully logged in!")  
+                QMessageBox.about(self, "Login", "Successfully logged in!\nTime: {0}".format(self.displaytime()))
             elif (self.idbox.text() == ""):
                 QMessageBox.about(self, "Empty", "Input student number")
                 self.clear()
@@ -38,6 +39,14 @@ class Ui_DutyChecker(QMainWindow):
             else:
                 QMessageBox.about(self, "Does not exist", "Student number does not exist")
                 self.clear()
+
+    def displaytime(self):
+        self.time = datetime.now()
+        print("HOUR: ", self.time.hour)
+        print("MINUTES: ", self.time.minute)
+        print("SECONDS: ", self.time.second)
+        return "{0}:{1}:{2}".format(self.time.hour, self.time.minute, self.time.second)
+
     def adminwindow(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_adminlogin()
