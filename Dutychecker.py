@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
-#from Login import Ui_adminlogin
+from Login import Ui_adminlogin
 from datetime import datetime
 
         
