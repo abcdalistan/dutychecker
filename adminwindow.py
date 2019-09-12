@@ -44,14 +44,13 @@ class Ui_MainWindow(QMainWindow):
                 self.addTable(row)
                 cur.close()
 
-            
     def addwindow(self):
         self.addwindow = QtWidgets.QMainWindow()
         self.ui = Ui_addwindow()
         self.ui.setupUi(self.addwindow)
         self.addwindow.show()
 
-    def searchwindow(self):
+    def searchWindow(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_searchwindow()
         self.ui.setupUi(self.window)
@@ -167,7 +166,7 @@ class Ui_MainWindow(QMainWindow):
         self.searchbut = QtWidgets.QPushButton(self.layoutWidget)
         self.searchbut.setStyleSheet("QPushButton {background-color: rgb(226, 226, 226)} QPushButton:hover {background-color: yellow};")
         self.searchbut.setObjectName("searchbut")
-        self.searchbut.clicked.connect(self.searchwindow)
+        self.searchbut.clicked.connect(self.searchWindow)
         self.horizontalLayout.addWidget(self.searchbut)
         self.viewbut = QtWidgets.QPushButton(self.layoutWidget)
         self.viewbut.setStyleSheet("QPushButton {background-color: rgb(226, 226, 226)} QPushButton:hover {background-color: yellow};")
