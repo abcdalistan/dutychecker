@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
-#from Login import Ui_adminlogin
+from Login import Ui_adminlogin
 from datetime import datetime
 
         
@@ -229,16 +229,16 @@ class Ui_DutyChecker(QMainWindow):
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.loginbut = QtWidgets.QPushButton(self.layoutWidget)
-        self.loginbut.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.loginbut.setStyleSheet("QPushButton {background-color: rgb(255, 255, 255)} QPushButton:hover {background-color:yellow};")
         self.loginbut.setObjectName("loginbut")
         self.loginbut.clicked.connect(self.login)
         self.horizontalLayout.addWidget(self.loginbut)
         self.logoutbut = QtWidgets.QPushButton(self.layoutWidget)
-        self.logoutbut.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.logoutbut.setStyleSheet("QPushButton {background-color: rgb(255, 255, 255)} QPushButton:hover {background-color:yellow};")
         self.logoutbut.setObjectName("logoutbut")
         self.horizontalLayout.addWidget(self.logoutbut)
         self.adminbut = QtWidgets.QPushButton(self.layoutWidget)
-        self.adminbut.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.adminbut.setStyleSheet("QPushButton {background-color: rgb(255, 255, 255)} QPushButton:hover {background-color:yellow};")
         self.adminbut.setObjectName("adminbut")
         self.adminbut.clicked.connect(self.adminwindow)
         self.horizontalLayout.addWidget(self.adminbut)
