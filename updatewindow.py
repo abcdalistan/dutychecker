@@ -24,12 +24,13 @@ class Ui_updatewindow(QMainWindow):
     def updateData(self):
         conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
         cur = conn.cursor()
+        idbox=self.idbox.text()
         fname = self.fnamebox.text()
         lname = self.lnamebox.text()
         posbox = self.posbox.text()
         cbox = self.cbox.text()
-        selected_account = [fname, lname, cbox, posbox, self.cell_student_number]
-        query = "UPDATE stafferinfo SET first_name=\"{0}\", last_name=\"{1}\", program=\"{2}\", position=\"{3}\" WHERE student_number = \"{4}\"".format(*selected_account)
+        selected_account = [idbox, fname, lname, cbox, posbox, self.cell_student_number]
+        query = "UPDATE stafferinfo SET student_number=\"{0}\", first_name=\"{1}\", last_name=\"{2}\", program=\"{3}\", position=\"{4}\" WHERE student_number = \"{5}\"".format(*selected_account)
         QMessageBox.about(self, "Updated", "Updated!")
         cur.execute(query)
         conn.commit()
