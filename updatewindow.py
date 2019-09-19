@@ -34,6 +34,7 @@ class Ui_updatewindow(QMainWindow):
         QMessageBox.about(self, "Updated", "Updated!")
         cur.execute(query)
         conn.commit()
+        print("HELLO")
     def setupUi(self, updatewindow):
         self.updatewindow = updatewindow
         updatewindow.setObjectName("updatewindow")
