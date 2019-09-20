@@ -4,13 +4,12 @@ import pymysql
 from Login import Ui_adminlogin
 from datetime import datetime
 
-
 class Ui_MainWindow(QMainWindow): 
     def clear(self):
         self.namebox.setText("")
         self.programbox.setText("")
         self.posbox.setText("")
-        
+
     def login(self):
         conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
@@ -29,7 +28,8 @@ class Ui_MainWindow(QMainWindow):
                 self.namebox.setText(" ".join([result[1], result[2]]))
                 self.programbox.setText(result[3])
                 self.posbox.setText(result[4])
-                QMessageBox.about(self, "Login", result[1] + " , you have successfully logged in!\nTime: {0}".format(self.displaytime()))
+                self.time = datetime.now()
+                QMessageBox.about(self, "Login", result[1] +", you have successfully logged in!\nTime: {0}".format(self.displaytime()))
             elif (self.idbox.text() == ""):
                 QMessageBox.about(self, "Empty", "Input student number")
                 self.clear()
@@ -39,11 +39,22 @@ class Ui_MainWindow(QMainWindow):
             else:
                 QMessageBox.about(self, "Does not exist", "Student number does not exist")
                 self.clear()
+
     def exit(self):
         sys.exit()
+
     def displaytime(self):
         self.time = datetime.now()
         return "{0}:{1}:{2}".format(self.time.hour, self.time.minute, self.time.second)
+
+    def loggedin(self):
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        student_number=self.idbox.text()
+        now= self.time = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        with conn:
+            cur=conn.cursor()
+            cur.execute("INSERT INTO loginstaff values (\"{}\",\"{}\")".format(current_time, student_number))
 
     def adminwindow(self):
         self.window = QtWidgets.QMainWindow()
@@ -132,7 +143,8 @@ class Ui_MainWindow(QMainWindow):
         self.loginbut.setFont(font)
         self.loginbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
         self.loginbut.setObjectName("loginbut")
-        self.loginbut.clicked.connect(self.login)
+        self.loginbut.clicked.connect(lambda: [self.login(),self.loggedin()])
+        #self.loginbut.clicked.connect(self.login)
         
         self.exitbut = QtWidgets.QPushButton(self.centralwidget)
         self.exitbut.setGeometry(QtCore.QRect(220, 530, 91, 31))
