@@ -29,7 +29,7 @@ class Ui_MainWindow(QMainWindow):
                 self.namebox.setText(" ".join([result[1], result[2]]))
                 self.programbox.setText(result[3])
                 self.posbox.setText(result[4])
-                QMessageBox.about(self, "Login", "Successfully logged in!\nTime: {0}".format(self.displaytime()))
+                QMessageBox.about(self, "Login", result[1] + " , you have successfully logged in!\nTime: {0}".format(self.displaytime()))
             elif (self.idbox.text() == ""):
                 QMessageBox.about(self, "Empty", "Input student number")
                 self.clear()
@@ -39,12 +39,10 @@ class Ui_MainWindow(QMainWindow):
             else:
                 QMessageBox.about(self, "Does not exist", "Student number does not exist")
                 self.clear()
-
+    def exit(self):
+        sys.exit()
     def displaytime(self):
         self.time = datetime.now()
-        print("HOUR: ", self.time.hour)
-        print("MINUTES: ", self.time.minute)
-        print("SECONDS: ", self.time.second)
         return "{0}:{1}:{2}".format(self.time.hour, self.time.minute, self.time.second)
 
     def adminwindow(self):
@@ -146,8 +144,7 @@ class Ui_MainWindow(QMainWindow):
         self.exitbut.setFont(font)
         self.exitbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton{border-radius:15px}QPushButton{color:white}QPushButton{border:2px solid yellow}QPushButton:pressed{background-color:yellow};")
         self.exitbut.setObjectName("exitbut")
-        self.exitbut.clicked.connect(QMainWindow.destroy)
-
+        self.exitbut.clicked.connect(self.exit)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(20, -20, 521, 641))
         self.label.setObjectName("label")
