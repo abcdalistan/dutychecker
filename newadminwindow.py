@@ -19,7 +19,7 @@ class Ui_MainWindow(QMainWindow):
 
     def viewStaffer(self):
         if self.flag:
-            conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+            conn = pymysql.connect('localhost', 'root', '', 'staffer')
             with conn:
                 cur=conn.cursor()
                 query=("SELECT * FROM stafferinfo")
@@ -33,7 +33,7 @@ class Ui_MainWindow(QMainWindow):
 
     def refreshfunc(self):
         self.tableWidget.setRowCount(0)
-        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        conn = pymysql.connect('localhost', 'root', '', 'staffer')
         with conn:
             cur=conn.cursor()
             query=("SELECT * FROM stafferinfo")
@@ -62,14 +62,13 @@ class Ui_MainWindow(QMainWindow):
         self.ui.setupUi(self.window)
         self.window.show()
 
-# Don't mind about the decorator '@QtCore.pyqtSlot()'
     @QtCore.pyqtSlot()
     def deleteClicked(self):
         try:
             answer = QMessageBox.question(self, "", "Are you sure you want to delete student number '{0}'".format(self.tableWidget.item(self.row, 0).text()))
             if answer == QMessageBox.Yes:
                 try:
-                    conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
+                    conn = pymysql.connect("localhost", "root", "", "staffer")
                     with conn:
                         cur = conn.cursor()
                         query = "DELETE FROM stafferinfo WHERE student_number = \'{0}\'".format(self.tableWidget.item(self.row, 0).text())
@@ -194,9 +193,10 @@ class Ui_MainWindow(QMainWindow):
         self.exitbut.setFont(font)
         self.exitbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:red};")
         self.exitbut.setObjectName("exitbut")
-        self.exitbut.clicked.connect(QtCore.QCoreApplication.instance().quit)
+        self.exitbut.clicked.connect(lambda closeFunction: MainWindow.close())
 
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
+        self.tableWidget.cellClicked.connect(self.cell_was_clicked)
         self.tableWidget.setGeometry(QtCore.QRect(110, 180, 771, 381))
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setStyleSheet("Background:White")
@@ -229,6 +229,8 @@ class Ui_MainWindow(QMainWindow):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        self.viewStaffer()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
