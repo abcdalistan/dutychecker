@@ -30,18 +30,11 @@ class Ui_MainWindow(QMainWindow):
                 self.posbox.setText(result[4])
                 self.time = datetime.now()
                 QMessageBox.about(self, "Login", result[1] +", you have successfully logged in!\nTime: {0}".format(self.displaytime()))
-            elif (self.idbox.text() == ""):
-                QMessageBox.about(self, "Empty", "Input student number")
-                self.clear()
-            elif (self.idbox.text().isalpha()):
-                QMessageBox.about(self, "Numbers only", "Positive integer numbers only")
-                self.clear()
-            else:
-                QMessageBox.about(self, "Does not exist", "Student number does not exist")
-                self.clear()
-
+        return None
+        
     def exit(self):
         sys.exit()
+        return None
 
     def displaytime(self):
         self.time = datetime.now()
@@ -54,8 +47,47 @@ class Ui_MainWindow(QMainWindow):
         current_time = now.strftime("%H:%M:%S")
         with conn:
             cur=conn.cursor()
-            cur.execute("INSERT INTO loginstaff values (\"{}\",\"{}\")".format(current_time, student_number))
+            query = "SELECT * FROM stafferinfo"
+            cur.execute(query)
+            result = cur.fetchall()
+            accounts = {}
+            for account_number in range(0, len(result)):
+                accounts[result[account_number][0]] = result[account_number]
+            if (student_number in accounts):
+                # Checks if the student number exists in the loginstaff table, otherwise, insert a new one
+                if self.checkStaffer(student_number):
+                    QMessageBox.about(self, "Login", "{0} already logged in!".format(student_number))
+                else:
+                    self.login() # Invokes the login method
+                    cur.execute("INSERT INTO loginstaff values (\"{}\",\"{}\")".format(current_time, student_number))
+            elif (self.idbox.text() == ""):
+                QMessageBox.about(self, "Empty", "Input student number")
+                self.clear()
+            elif (self.idbox.text().isalpha()):
+                QMessageBox.about(self, "Numbers only", "Positive integer numbers only")
+                self.clear()
+            else:
+                QMessageBox.about(self, "Does not exist", "Student number does not exist")
+                self.clear()
+        return None
 
+    # Checks if the given student number exists in the loginstaff table
+    def checkStaffer(self, student_number):
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        with conn:
+            cur = conn.cursor()
+            query = "SELECT student_number FROM loginstaff"
+            cur.execute(query)
+            result = cur.fetchall()
+            staffers = []
+            for stud_num in result:
+                staffers.append(stud_num[0])
+            if student_number in staffers:
+                return 1
+            else:
+                return 0
+        return None
+        
     def adminwindow(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_adminlogin()
@@ -143,7 +175,7 @@ class Ui_MainWindow(QMainWindow):
         self.loginbut.setFont(font)
         self.loginbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
         self.loginbut.setObjectName("loginbut")
-        self.loginbut.clicked.connect(lambda: [self.login(),self.loggedin()])
+        self.loginbut.clicked.connect(self.loggedin)
         #self.loginbut.clicked.connect(self.login)
         
         self.exitbut = QtWidgets.QPushButton(self.centralwidget)
