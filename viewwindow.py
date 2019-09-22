@@ -1,8 +1,26 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import pymysql
 
 class Ui_MainWindow(object):
+    def addTable(self,columns):
+        rowPosition=self.dutytable.rowCount()
+        self.dutytable.insertRow(rowPosition)
+        for i, column in enumerate(columns):
+            self.dutytable.setItem(rowPosition,i, QtWidgets.QTableWidgetItem(str(column)))
+    def viewStaffer(self):
+        if self.flag:
+            conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+            with conn:
+                cur=conn.cursor()
+                query=("select ls.logintime, si.first_name from loginstaff ls inner join stafferinfo si on si.student_number=ls.student_number")
+                cur.execute(query)
+                result = cur.fetchall()
+                for row in result:
+                    self.addTable(row)
+                cur.close()
+            self.flag = 0
     def setupUi(self, MainWindow):
+        self.flag = 1
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 450)
         MainWindow.setMinimumSize(QtCore.QSize(800, 450))
@@ -54,7 +72,7 @@ class Ui_MainWindow(object):
         self.daybox.addItem("")
         self.daybox.addItem("")
         self.daybox.addItem("")
-        self.editbut = QtWidgets.QPushButton(self.viewwindow)
+        self.editbut = QtWidgets.QPushButton(self.viewwindow, clicked=self.viewStaffer)
         self.editbut.setGeometry(QtCore.QRect(40, 70, 75, 23))
         self.editbut.setStyleSheet("background-color: rgb(234, 234, 234);")
         self.editbut.setObjectName("editbut")
