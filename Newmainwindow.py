@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
-from Login import Ui_adminlogin
+from Newlogin import Ui_adminlogin
 from datetime import datetime
 
 class Ui_MainWindow(QMainWindow): 
@@ -186,9 +186,10 @@ class Ui_MainWindow(QMainWindow):
         font.setBold(True)
         font.setWeight(75)
         self.exitbut.setFont(font)
-        self.exitbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton{border-radius:15px}QPushButton{color:white}QPushButton{border:2px solid yellow}QPushButton:pressed{background-color:yellow};")
+        self.exitbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton{border-radius:15px}QPushButton{color:white}QPushButton{border:2px solid yellow}QPushButton:pressed{background-color:red};")
         self.exitbut.setObjectName("exitbut")
         self.exitbut.clicked.connect(self.exit)
+
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(20, -20, 521, 641))
         self.label.setObjectName("label")
