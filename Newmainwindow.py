@@ -4,13 +4,12 @@ import pymysql
 from Login import Ui_adminlogin
 from datetime import datetime
 
-
 class Ui_MainWindow(QMainWindow): 
     def clear(self):
         self.namebox.setText("")
         self.programbox.setText("")
         self.posbox.setText("")
-        
+
     def login(self):
         conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
@@ -29,7 +28,38 @@ class Ui_MainWindow(QMainWindow):
                 self.namebox.setText(" ".join([result[1], result[2]]))
                 self.programbox.setText(result[3])
                 self.posbox.setText(result[4])
-                QMessageBox.about(self, "Login", "Successfully logged in!\nTime: {0}".format(self.displaytime()))
+                self.time = datetime.now()
+                QMessageBox.about(self, "Login", result[1] +", you have successfully logged in!\nTime: {0}".format(self.displaytime()))
+        return None
+        
+    def exit(self):
+        sys.exit()
+        return None
+
+    def displaytime(self):
+        self.time = datetime.now()
+        return "{0}:{1}:{2}".format(self.time.hour, self.time.minute, self.time.second)
+
+    def loggedin(self):
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        student_number=self.idbox.text()
+        now= self.time = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        with conn:
+            cur=conn.cursor()
+            query = "SELECT * FROM stafferinfo"
+            cur.execute(query)
+            result = cur.fetchall()
+            accounts = {}
+            for account_number in range(0, len(result)):
+                accounts[result[account_number][0]] = result[account_number]
+            if (student_number in accounts):
+                # Checks if the student number exists in the loginstaff table, otherwise, insert a new one
+                if self.checkStaffer(student_number):
+                    QMessageBox.about(self, "Login", "{0} already logged in!".format(student_number))
+                else:
+                    self.login() # Invokes the login method
+                    cur.execute("INSERT INTO loginstaff values (\"{}\",\"{}\")".format(current_time, student_number))
             elif (self.idbox.text() == ""):
                 QMessageBox.about(self, "Empty", "Input student number")
                 self.clear()
@@ -39,14 +69,25 @@ class Ui_MainWindow(QMainWindow):
             else:
                 QMessageBox.about(self, "Does not exist", "Student number does not exist")
                 self.clear()
+        return None
 
-    def displaytime(self):
-        self.time = datetime.now()
-        print("HOUR: ", self.time.hour)
-        print("MINUTES: ", self.time.minute)
-        print("SECONDS: ", self.time.second)
-        return "{0}:{1}:{2}".format(self.time.hour, self.time.minute, self.time.second)
-
+    # Checks if the given student number exists in the loginstaff table
+    def checkStaffer(self, student_number):
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        with conn:
+            cur = conn.cursor()
+            query = "SELECT student_number FROM loginstaff"
+            cur.execute(query)
+            result = cur.fetchall()
+            staffers = []
+            for stud_num in result:
+                staffers.append(stud_num[0])
+            if student_number in staffers:
+                return 1
+            else:
+                return 0
+        return None
+        
     def adminwindow(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_adminlogin()
@@ -134,7 +175,8 @@ class Ui_MainWindow(QMainWindow):
         self.loginbut.setFont(font)
         self.loginbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
         self.loginbut.setObjectName("loginbut")
-        self.loginbut.clicked.connect(self.login)
+        self.loginbut.clicked.connect(self.loggedin)
+        #self.loginbut.clicked.connect(self.login)
         
         self.exitbut = QtWidgets.QPushButton(self.centralwidget)
         self.exitbut.setGeometry(QtCore.QRect(220, 530, 91, 31))
@@ -146,8 +188,7 @@ class Ui_MainWindow(QMainWindow):
         self.exitbut.setFont(font)
         self.exitbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton{border-radius:15px}QPushButton{color:white}QPushButton{border:2px solid yellow}QPushButton:pressed{background-color:yellow};")
         self.exitbut.setObjectName("exitbut")
-        self.exitbut.clicked.connect(QMainWindow.destroy)
-
+        self.exitbut.clicked.connect(self.exit)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(20, -20, 521, 641))
         self.label.setObjectName("label")
