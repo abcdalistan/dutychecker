@@ -6,7 +6,7 @@ from searchwindow import Ui_searchwindow
 from viewwindow import Ui_MainWindow as viewwindow
 from updatewindow import Ui_updatewindow as updatewindow
 
-class Ui_MainWindow(object):
+class Ui_MainWindow(QMainWindow):
 
     def cell_was_clicked(self, row, column):
         self.row = row
@@ -62,7 +62,7 @@ class Ui_MainWindow(object):
         self.ui.setupUi(self.window)
         self.window.show()
 
-    # Don't mind about the decorator '@QtCore.pyqtSlot()'
+# Don't mind about the decorator '@QtCore.pyqtSlot()'
     @QtCore.pyqtSlot()
     def deleteClicked(self):
         try:
@@ -134,7 +134,7 @@ class Ui_MainWindow(object):
         self.delbut.setFont(font)
         self.delbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
         self.delbut.setObjectName("delbut")
-        #self.delbut.clicked.connect(self.deleteClicked)
+        self.delbut.clicked.connect(self.deleteClicked)
 
         self.searchbut = QtWidgets.QPushButton(self.centralwidget)
         self.searchbut.setGeometry(QtCore.QRect(330, 130, 81, 31))
