@@ -1,8 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
-from addwindow import Ui_addwindow
-from searchwindow import Ui_searchwindow
+from newaddwindow import Ui_addwindow
+from newsearchwindow import Ui_searchwindow
 from viewwindow import Ui_MainWindow as viewwindow
 from updatewindow import Ui_updatewindow as updatewindow
 
