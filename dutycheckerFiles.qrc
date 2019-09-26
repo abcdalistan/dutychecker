@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="login">
+    <file>Pics/Admin-window.png</file>
+    <file>Pics/Login-window.png</file>
+    <file>Pics/Main-window.png</file>
+  </qresource>
+</RCC>

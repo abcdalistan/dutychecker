@@ -1,10 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
+from PyQt5.QtWidgets import *
 import pymysql
 from newaddwindow import Ui_addwindow
 from newsearchwindow import Ui_searchwindow
-from viewwindow import Ui_MainWindow as viewwindow
+from Newviewwindow import Ui_viewwindow as viewwindow
 from updatewindow import Ui_updatewindow as updatewindow
+from PyQt5.QtCore import QCoreApplication,Qt,QBasicTimer,QPoint
 
 class Ui_MainWindow(QMainWindow):
 
@@ -101,7 +102,7 @@ class Ui_MainWindow(QMainWindow):
         self.flag = 1
         self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(995, 759)
+        MainWindow.setGeometry(200,0,995, 759)
         MainWindow.setStyleSheet("background:transparent;")
         MainWindow.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)

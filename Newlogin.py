@@ -83,9 +83,9 @@ class Ui_adminlogin(QMainWindow):
                     QMessageBox.about(self, 'Warning!', "Incorrect!")
 
     #def keyevent(self,event):
-        if event.key() == QtCore.Ket.Key_Return:
-           self.Adminlogin.clicked.connect(self.loginadmin)
-        return None
+        #if event.key() == QtCore.Ket.Key_Return:
+          # self.Adminlogin.clicked.connect(self.loginadmin)
+       # return None
 
 
     def setupUi(self, adminlogin):
@@ -111,7 +111,7 @@ class Ui_adminlogin(QMainWindow):
         self.Adminlogin.setFont(font)
         self.Adminlogin.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
         self.Adminlogin.setObjectName("Adminlogin")
-        #self.Adminlogin.clicked.connect(self.loginadmin)
+        self.Adminlogin.clicked.connect(self.loginadmin)
         #adminlogin.keyPressEvent = self.event
         
         self.Password = QtWidgets.QLineEdit(self.centralwidget)
