@@ -171,8 +171,14 @@ class Ui_adminlogin(QMainWindow):
         self.statusbar.setObjectName("statusbar")
         adminlogin.setStatusBar(self.statusbar)
 
+        adminlogin.keyPressEvent = self.defineKeyPressEvent
+
         self.retranslateUi(adminlogin)
         QtCore.QMetaObject.connectSlotsByName(adminlogin)
+
+    def defineKeyPressEvent(self, e):
+        if e.key() == QtCore.Qt.Key_Return:
+            self.loginadmin()
 
     def retranslateUi(self, adminlogin):
         _translate = QtCore.QCoreApplication.translate

@@ -155,18 +155,6 @@ class Ui_MainWindow(QMainWindow):
         self.idbox.setStyleSheet("Background:white")
         self.idbox.setObjectName("idbox")
 
-        self.adminbut = QtWidgets.QPushButton(self.centralwidget)
-        self.adminbut.setGeometry(QtCore.QRect(220, 480, 91, 31))
-        font = QtGui.QFont()
-        font.setFamily("Nexa Bold")
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(75)
-        self.adminbut.setFont(font)
-        self.adminbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton{border-radius:15px}QPushButton{color:white}QPushButton{border:2px solid yellow}QPushButton:pressed{background-color:yellow};")
-        self.adminbut.setObjectName("adminbut")
-        self.adminbut.clicked.connect(self.adminwindow)
-
         self.loginbut = QtWidgets.QPushButton(self.centralwidget)
         self.loginbut.setGeometry(QtCore.QRect(220, 430, 91, 31))
         font = QtGui.QFont()
@@ -178,10 +166,32 @@ class Ui_MainWindow(QMainWindow):
         self.loginbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
         self.loginbut.setObjectName("loginbut")
         self.loginbut.clicked.connect(self.loggedin)
-        #self.loginbut.clicked.connect(self.login)
-        
+
+        self.logoutbut = QtWidgets.QPushButton(self.centralwidget)
+        self.logoutbut.setGeometry(QtCore.QRect(220, 470, 91, 31))
+        font = QtGui.QFont()
+        font.setFamily("Nexa Bold")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.logoutbut.setFont(font)
+        self.logoutbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
+        self.logoutbut.setObjectName("logoutbut")
+
+        self.adminbut = QtWidgets.QPushButton(self.centralwidget)
+        self.adminbut.setGeometry(QtCore.QRect(220, 510, 91, 31))
+        font = QtGui.QFont()
+        font.setFamily("Nexa Bold")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.adminbut.setFont(font)
+        self.adminbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton{border-radius:15px}QPushButton{color:white}QPushButton{border:2px solid yellow}QPushButton:pressed{background-color:yellow};")
+        self.adminbut.setObjectName("adminbut")
+        self.adminbut.clicked.connect(self.adminwindow)
+      
         self.exitbut = QtWidgets.QPushButton(self.centralwidget)
-        self.exitbut.setGeometry(QtCore.QRect(220, 530, 91, 31))
+        self.exitbut.setGeometry(QtCore.QRect(220, 550, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Nexa Bold")
         font.setPointSize(14)
@@ -196,7 +206,7 @@ class Ui_MainWindow(QMainWindow):
         self.label.setGeometry(QtCore.QRect(20, -20, 521, 641))
         self.label.setObjectName("label")
         self.Time = QtWidgets.QLabel(self.centralwidget)
-        self.Time.setGeometry(QtCore.QRect(90, 520, 71, 31))
+        self.Time.setGeometry(QtCore.QRect(75, 520, 71, 31))
         font = QtGui.QFont()
         font.setFamily("Nexa Bold")
         font.setPointSize(14)
@@ -207,7 +217,7 @@ class Ui_MainWindow(QMainWindow):
         self.Time.setObjectName("Time")
 
         self.Date = QtWidgets.QLabel(self.centralwidget)
-        self.Date.setGeometry(QtCore.QRect(90, 550, 71, 31))
+        self.Date.setGeometry(QtCore.QRect(75, 550, 71, 31))
         font = QtGui.QFont()
         font.setFamily("Nexa Bold")
         font.setPointSize(14)
@@ -222,14 +232,21 @@ class Ui_MainWindow(QMainWindow):
         self.posbox.raise_()
         self.idbox.raise_()
         self.loginbut.raise_()
+        self.logoutbut.raise_()
         self.adminbut.raise_()
         self.Time.raise_()
         self.Date.raise_()
         self.exitbut.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
 
+        MainWindow.keyPressEvent = self.defineKeyPressEvent
+        
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def defineKeyPressEvent(self, e):
+        if e.key() == QtCore.Qt.Key_Return:
+            self.loggedin()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -238,12 +255,13 @@ class Ui_MainWindow(QMainWindow):
         self.programbox.setPlaceholderText(_translate("MainWindow", "Program"))
         self.posbox.setPlaceholderText(_translate("MainWindow", "Position"))
         self.idbox.setPlaceholderText(_translate("MainWindow", "Enter student ID"))
-        self.adminbut.setText(_translate("MainWindow", "ADMIN"))
-        self.loginbut.setText(_translate("MainWindow", "LOGIN"))
-        self.exitbut.setText(_translate("MainWindow","EXIT"))
+        self.adminbut.setText(_translate("MainWindow", "Admin"))
+        self.loginbut.setText(_translate("MainWindow", "Login"))
+        self.logoutbut.setText(_translate("MainWindow", "Logout"))
+        self.exitbut.setText(_translate("MainWindow","Exit"))
         self.label.setText(_translate("MainWindow", "<html><head/><body><p><img src=\":/login/Pics/Main-window.png\"width=561 height=641/></p></body></html>"))
-        self.Time.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt;\">TIME:</span></p></body></html>"))
-        self.Date.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt;\">DATE:</span></p></body></html>"))
+        self.Time.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt;\">TIME:</span></p></body></html>"))
+        self.Date.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt;\">DATE:</span></p></body></html>"))
 import dutycheckerFiles_rc
 
 

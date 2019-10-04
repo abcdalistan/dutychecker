@@ -1,7 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import *
 import pymysql
+from PyQt5.QtCore import QCoreApplication,Qt,QBasicTimer,QPoint
+from Newdutysched import Ui_MainWindow
 
-class Ui_viewwindow:
+class Ui_viewwindow(QMainWindow):
     # def cell_was_clicked(self, row, column):
     #     self.row = row
     #     return None
@@ -71,6 +74,12 @@ class Ui_viewwindow:
             self.flag = 0
         return None
 
+    def opensched(self):
+        self.opensched = QtWidgets.QMainWindow()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self.opensched)
+        self.opensched.show()
+
     def setupUi(self, viewwindow):
         self.flag = 1
         viewwindow.setObjectName("viewwindow")
@@ -128,6 +137,7 @@ class Ui_viewwindow:
         self.schedbut.setFont(font)
         self.schedbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
         self.schedbut.setObjectName("schedbut")
+        self.schedbut.clicked.connect(self.opensched)
 
         self.exitbut = QtWidgets.QPushButton(self.centralwidget)
         self.exitbut.setGeometry(QtCore.QRect(70, 260, 151, 31))

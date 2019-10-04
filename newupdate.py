@@ -2,7 +2,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
 
-
 class Ui_updatewindow(QMainWindow):
     def insertData(self, cell_student_number):
         conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")

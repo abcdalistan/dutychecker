@@ -1,5 +1,14 @@
 from datetime import datetime
+<<<<<<< HEAD
+
+flag = True
+index = 0
+
+# Input schedules (automatic logout)
+schedules = ["06:38:40", "06:38:45"]
+=======
 import pymysql
+>>>>>>> 8cd1b149fe2f7066ff3669de9cc00978a0378c11
 
 def stringToList(string):
     tempList = string.rsplit(":")
@@ -18,6 +27,18 @@ def checkTime(time1, time2):
         elif time1[1] == time2[1]:
             if time1[2] > time2[2]:
                 return True
+<<<<<<< HEAD
+
+while flag:
+    time = datetime.now()
+    now = time.strftime("%H:%M:%S")
+    if checkTime(now, schedules[index]):
+        print("Time's up! {0}".format(schedules[index]))
+        if index < len(schedules)-1:
+            index += 1
+        else:
+            flag = False
+=======
             else:
                 return False
         else:
@@ -144,5 +165,6 @@ while True:
             print(Anazel.status)
             t1 = False
     #Zeus.logoutCheckTime(time)
+>>>>>>> 8cd1b149fe2f7066ff3669de9cc00978a0378c11
 
 input("")
