@@ -101,19 +101,20 @@ class Ui_adminlogin(QMainWindow):
         self.label.setGeometry(QtCore.QRect(40, 60, 511, 481))
         self.label.setObjectName("label")
 
-        self.Adminlogin = QtWidgets.QPushButton(self.centralwidget)
-        self.Adminlogin.setGeometry(QtCore.QRect(220, 400, 91, 31))
+              
+        self.usernamebox = QtWidgets.QLineEdit(self.centralwidget)
+        self.usernamebox.setGeometry(QtCore.QRect(180, 290, 271, 31))
         font = QtGui.QFont()
         font.setFamily("Nexa Bold")
         font.setPointSize(14)
         font.setBold(True)
         font.setWeight(75)
-        self.Adminlogin.setFont(font)
-        self.Adminlogin.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
-        self.Adminlogin.setObjectName("Adminlogin")
-        self.Adminlogin.clicked.connect(self.loginadmin)
-        #adminlogin.keyPressEvent = self.event
-        
+        self.usernamebox.setFont(font)
+        self.usernamebox.setEchoMode(QtWidgets.QLineEdit.Normal)
+        self.usernamebox.setAlignment(QtCore.Qt.AlignCenter)
+        self.usernamebox.setObjectName("usernamebox")
+        self.usernamebox.setStyleSheet("Background:White")
+
         self.Password = QtWidgets.QLineEdit(self.centralwidget)
         self.Password.setGeometry(QtCore.QRect(180, 350, 271, 31))
         font = QtGui.QFont()
@@ -128,19 +129,18 @@ class Ui_adminlogin(QMainWindow):
         self.Password.setAlignment(QtCore.Qt.AlignCenter)
         self.Password.setObjectName("Password")
         self.Password.setStyleSheet("Background:White")
-        
-        self.usernamebox = QtWidgets.QLineEdit(self.centralwidget)
-        self.usernamebox.setGeometry(QtCore.QRect(180, 290, 271, 31))
+
+        self.Adminlogin = QtWidgets.QPushButton(self.centralwidget)
+        self.Adminlogin.setGeometry(QtCore.QRect(220, 400, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Nexa Bold")
         font.setPointSize(14)
         font.setBold(True)
         font.setWeight(75)
-        self.usernamebox.setFont(font)
-        self.usernamebox.setEchoMode(QtWidgets.QLineEdit.Normal)
-        self.usernamebox.setAlignment(QtCore.Qt.AlignCenter)
-        self.usernamebox.setObjectName("usernamebox")
-        self.usernamebox.setStyleSheet("Background:White")
+        self.Adminlogin.setFont(font)
+        self.Adminlogin.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
+        self.Adminlogin.setObjectName("Adminlogin")
+        self.Adminlogin.clicked.connect(self.loginadmin)
 
         self.Signup = QtWidgets.QPushButton(self.centralwidget)
         self.Signup.setGeometry(QtCore.QRect(320, 400, 91, 31))
@@ -178,6 +178,8 @@ class Ui_adminlogin(QMainWindow):
 
     def defineKeyPressEvent(self, e):
         if e.key() == QtCore.Qt.Key_Return:
+            self.loginadmin()
+        if e.key() == QtCore.Qt.Key_Enter:
             self.loginadmin()
 
     def retranslateUi(self, adminlogin):
