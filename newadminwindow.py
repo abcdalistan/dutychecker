@@ -20,7 +20,7 @@ class Ui_MainWindow(QMainWindow):
 
     def viewStaffer(self):
         if self.flag:
-            conn = pymysql.connect('localhost', 'root', '', 'staffer')
+            conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
             with conn:
                 cur=conn.cursor()
                 query=("SELECT * FROM stafferinfo")
@@ -34,7 +34,7 @@ class Ui_MainWindow(QMainWindow):
 
     def refreshfunc(self):
         self.tableWidget.setRowCount(0)
-        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         with conn:
             cur=conn.cursor()
             query=("SELECT * FROM stafferinfo")
