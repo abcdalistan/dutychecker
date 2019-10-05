@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox, QDesktopWidget
+from PyQt5.QtCore import QPoint
 import pymysql
 from Newlogin import Ui_adminlogin
 from datetime import datetime
@@ -240,16 +241,25 @@ class Ui_MainWindow(QMainWindow):
         self.exitbut.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
 
-        MainWindow.keyPressEvent = self.defineKeyPressEvent
         
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
 
     def defineKeyPressEvent(self, e):
         if e.key() == QtCore.Qt.Key_Return:
             self.loggedin()
         if e.key() == QtCore.Qt.Key_Enter:
             self.loggedin()
+
+    def mousePressEvent(self, event):
+        self.oldPos = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        delta = QPoint (event.globalPos() - self.oldPos)
+        #print(delta)
+        self.move(self.x() + delta.x(), self.y() + delta.y())
+        self.oldPos = event.globalPos()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

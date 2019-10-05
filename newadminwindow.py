@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox, QDesktopWidget
 import pymysql
 from newaddwindow import Ui_addwindow
 from newsearchwindow import Ui_searchwindow
@@ -227,11 +227,16 @@ class Ui_MainWindow(QMainWindow):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        MainWindow.keyPressEvent = self.defineKeyPressEvent
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         self.viewStaffer()
+   
+    def defineKeyPressEvent(self, e):
+        if e.key() == QtCore.Qt.Key_Delete:
+            self.deleteClicked()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
