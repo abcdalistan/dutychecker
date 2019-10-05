@@ -12,7 +12,7 @@ class Ui_MainWindow(QMainWindow):
         self.posbox.setText("")
 
     def login(self):
-        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        conn = pymysql.connect('localhost', 'root', '', 'staffer')
         student_number=self.idbox.text()
         with conn:
             cur=conn.cursor()
@@ -41,8 +41,10 @@ class Ui_MainWindow(QMainWindow):
         self.time = datetime.now()
         return "{0}:{1}:{2}".format(self.time.hour, self.time.minute, self.time.second)
 
+
+
     def loggedin(self):
-        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        conn = pymysql.connect('localhost', 'root', '', 'staffer')
         student_number=self.idbox.text()
         now = self.time = datetime.now()
         current_date = now.strftime("%y-%m-%d")
@@ -75,7 +77,7 @@ class Ui_MainWindow(QMainWindow):
 
     # Checks if the given student number exists in the loginstaff table
     def checkStaffer(self, student_number):
-        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        conn = pymysql.connect('localhost', 'root', '', 'staffer')
         with conn:
             cur = conn.cursor()
             query = "SELECT student_number FROM loginstaff"
@@ -89,7 +91,60 @@ class Ui_MainWindow(QMainWindow):
             else:
                 return 0
         return None
-        
+
+    def logout(self):
+        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        student_number=self.idbox.text()
+        now = self.time = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        with conn:
+            cur=conn.cursor()
+            query = "SELECT * FROM stafferinfo"
+            cur.execute(query)
+            result = cur.fetchall()
+            accounts = {}
+            for account_number in range(0, len(result)):
+                accounts[result[account_number][0]] = result[account_number]
+            if (student_number in accounts):
+                query = "SELECT * FROM stafferinfo where student_number= \"{}\"".format(student_number)
+                cur.execute(query)
+                result = cur.fetchone()
+                self.namebox.setText(" ".join([result[1], result[2]]))
+                self.programbox.setText(result[3])
+                self.posbox.setText(result[4])
+                self.time = datetime.now()
+                QMessageBox.about(self, "Logout", result[1] +", you have successfully logged out!\nTime: {0}".format(self.displaytime()))
+        return None
+
+    def loggedout(self):
+        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        student_number=self.idbox.text()
+        now = self.time = datetime.now()
+        current_date = now.strftime("%y-%m-%d")
+        current_time = now.strftime("%H:%M:%S")
+        with conn:
+            cur=conn.cursor()
+            query = "SELECT * FROM loginstaff"
+            cur.execute(query)
+            result = cur.fetchall()
+            accounts = {}
+            for account_number in range(0, len(result)):
+                accounts[result[account_number][0]] = result[account_number]
+            if (student_number in accounts): 
+                self.logout()
+                cur.execute("UPDATE loginstaff SET logout_time = '{0}' where student_number=\"{1}\"".format(current_time, student_number))
+                self.clear()
+            elif (self.idbox.text() == ""):
+                QMessageBox.about(self, "Empty", "Input student number")
+                self.clear()
+            elif (self.idbox.text().isalpha()):
+                QMessageBox.about(self, "Numbers only", "Positive integer numbers only")
+                self.clear()
+            else:
+                QMessageBox.about(self, "Does not exist", "Student number does not exist")
+                self.clear()
+        return None
+
     def adminwindow(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_adminlogin()
@@ -139,6 +194,7 @@ class Ui_MainWindow(QMainWindow):
         self.logoutbut.setFont(font)
         self.logoutbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
         self.logoutbut.setObjectName("logoutbut")
+        self.logoutbut.clicked.connect(self.loggedout)
 
         self.adminbut = QtWidgets.QPushButton(self.centralwidget)
         self.adminbut.setGeometry(QtCore.QRect(220, 510, 91, 31))
