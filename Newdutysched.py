@@ -34,7 +34,7 @@ class Ui_MainWindow(QMainWindow):
         conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
         with conn:
             cur=conn.cursor()
-            query=("SELECT  FROM schedule s INNER JOIN  si on ls.student_number=si.student_number")
+            query="select si.student_number, s.start_time, s.end_time, si.first_name, s.day, s.semester, s.academic_year from schedules s inner join stafferinfo si on si.student_number=s.student_number"
             cur.execute(query)
             result = cur.fetchall()
             for row in result:
