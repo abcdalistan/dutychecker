@@ -77,7 +77,7 @@ class Ui_MainWindow(QMainWindow):
 
     # Checks if the given student number exists in the loginstaff table
     def checkStaffer(self, student_number):
-        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         with conn:
             cur = conn.cursor()
             query = "SELECT student_number FROM loginstaff"
@@ -93,7 +93,7 @@ class Ui_MainWindow(QMainWindow):
         return None
 
     def logout(self):
-        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
         now = self.time = datetime.now()
         current_time = now.strftime("%H:%M:%S")
@@ -117,7 +117,7 @@ class Ui_MainWindow(QMainWindow):
         return None
 
     def loggedout(self):
-        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
         now = self.time = datetime.now()
         current_date = now.strftime("%y-%m-%d")
@@ -131,9 +131,12 @@ class Ui_MainWindow(QMainWindow):
             for account_number in range(0, len(result)):
                 accounts[result[account_number][0]] = result[account_number]
             if (student_number in accounts): 
-                self.logout()
-                cur.execute("UPDATE loginstaff SET logout_time = '{0}' where student_number=\"{1}\"".format(current_time, student_number))
-                self.clear()
+                if self.checkStaffer(student_number):
+                    QMessageBox.about(self, "Logout", "{0} already logged out!".format(student_number))
+                else:
+                    self.logout()
+                    cur.execute("UPDATE loginstaff SET logout_time = '{0}' where student_number=\"{1}\"".format(current_time, student_number))
+                    self.clear()
             elif (self.idbox.text() == ""):
                 QMessageBox.about(self, "Empty", "Input student number")
                 self.clear()
