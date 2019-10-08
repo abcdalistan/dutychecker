@@ -59,12 +59,11 @@ class Ui_viewwindow(QMainWindow):
 
     def viewStaffer(self):
         if self.flag:
-            conn = pymysql.connect('localhost', 'root', '', 'staffer')
+            conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
             with conn:
                 cur = conn.cursor()
-                query = """SELECT s.start_time, s.end_time, si.first_name, ls.status, ls.date FROM loginstaff ls 
-                INNER JOIN schedules s ON ls.student_number=s.student_number INNER JOIN stafferinfo si ON 
-                s.student_number=si.student_number WHERE ls.status = 'Done'"""
+                query = """SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls 
+                INNER JOIN stafferinfo si ON ls.student_number=si.student_number"""
                 cur.execute(query)
                 staffers = cur.fetchall()
                 print(staffers)
