@@ -12,7 +12,7 @@ class Ui_MainWindow(QMainWindow):
         self.posbox.setText("")
 
     def login(self):
-        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
         with conn:
             cur=conn.cursor()
