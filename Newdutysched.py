@@ -4,6 +4,7 @@ import pymysql
 from newaddwindow_schedwindow import Ui_addwindow
 from newupdate_schedwindow import Ui_updatewindow as updatewindow
 from newsearchwindow_schedwindow import Ui_searchwindow
+from newfinewindow import Ui_MainWindow as finewindow
 from PyQt5.QtCore import QCoreApplication,Qt,QBasicTimer,QPoint
 
 class Ui_MainWindow(QMainWindow):
