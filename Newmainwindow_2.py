@@ -1,13 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox, QDesktopWidget, QLCDNumber
-from PyQt5.QtCore import QPoint, QTimer, QTime
+from PyQt5.QtCore import QPoint, QTimer, QTime, QDate
 import sys
 import pymysql
 from Newlogin import Ui_adminlogin
 from datetime import datetime
 
 class Ui_MainWindow(QMainWindow): 
-
     def stringToList(self, string):
         tempList = string.rsplit(":")
         for i in range(0, len(tempList)):
@@ -61,7 +60,7 @@ class Ui_MainWindow(QMainWindow):
         return None
 
     def checkStartTime(self, student_number):
-        conn = pymysql.connect("localhost", "root", "", "staffer")
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         with conn:
             cursor = conn.cursor()
             query = "SELECT start_time FROM schedules WHERE student_number = '{0}'".format(student_number)
@@ -178,6 +177,14 @@ class Ui_MainWindow(QMainWindow):
                 QMessageBox.about(self, "Does not exist", "Student number does not exist")
                 self.clear()
         return None
+
+    def showTime(self):
+        time = QTime.currentTime()
+        date= QDate.currentDate()
+        showdate=date.toString('dddd,MMM-dd-yyyy')
+        showtime=time.toString('hh:mm:ss')
+        self.timebox.setText(showtime)   
+        self.datebox.setText(showdate)
 
     def adminwindow(self):
         self.window = QtWidgets.QMainWindow()
@@ -305,8 +312,10 @@ class Ui_MainWindow(QMainWindow):
         self.timebox.setReadOnly(True)
         self.timebox.setStyleSheet("background:White")
         self.timebox.setObjectName("timebox")
-
-
+        timer =QTimer(self)
+        timer.timeout.connect(self.showTime)
+        timer.start(1000)
+        
         self.datebox = QtWidgets.QLineEdit(self.centralwidget)
         self.datebox.setGeometry(QtCore.QRect(118, 550, 91, 27))
         font = QtGui.QFont()
@@ -319,7 +328,7 @@ class Ui_MainWindow(QMainWindow):
         self.datebox.setReadOnly(True)
         self.datebox.setStyleSheet("background:White")
         self.datebox.setObjectName("datebox")
-
+        self.showTime()
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(20, -20, 521, 641))
         self.label.setObjectName("label")
@@ -391,7 +400,6 @@ class Ui_MainWindow(QMainWindow):
         self.loginbut.setText(_translate("MainWindow", "Login"))
         self.logoutbut.setText(_translate("MainWindow", "Logout"))
         self.exitbut.setText(_translate("MainWindow","Exit"))
-        #self.timebox.setText(_translate("MainWindow"))
         self.label.setText(_translate("MainWindow", "<html><head/><body><p><img src=\":/login/Pics/Main-window.png\"width=561 height=641/></p></body></html>"))
         self.Time.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt;\">TIME:</span></p></body></html>"))
         self.Date.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt;\">DATE:</span></p></body></html>"))
