@@ -1,19 +1,19 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import pymysql
-
+from datetime import datetime
 
 class Ui_searchwindow(QMainWindow):
-
     def searchstaffer(self):
         conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         name=self.namebox.text()
         if (name==''):
             QMessageBox.about(self, "Empty", "Input first name")
             return
+
         with conn:
             cur=conn.cursor()
-            query = "SELECT * FROM stafferinfo"
+            query = "SELECT * FROM schedules"
             cur.execute(query)
             result = cur.fetchall()
             accounts = {}
@@ -21,15 +21,14 @@ class Ui_searchwindow(QMainWindow):
                 accounts[result[account_number][0]] = result[account_number]
                 for student_number in accounts:
                     if (student_number in accounts):
-                        query = "SELECT si.first_name from stafferinfo si inner join schedules s on si.student_number=s.student_number".format(name, self.idbox)
-                        cur.execute(query)
-                        result = cur.fetchone()
-                        self.idbox.setText(result[0])
-                        # self.tinbox.setText(result[1])
-                        # self.toutbox.setText(result[2])
-                        # self.daybox.setText(result[3])
-                        # self.sembox.setText(result[4])
-                        # self.aybox.setText(result[5])
+                        cur.execute("SELECT * FROM stafferinfo where first_name= \"{}\"".format(name))
+                        result= cur.fetchone()
+                        self.idbox.setText(accounts[student_number][0])
+                        self.tinbox.setText((datetime.min + accounts[student_number][1]).time().strftime('%H:%M:%S'))
+                        self.toutbox.setText((datetime.min + accounts[student_number][2]).time().strftime('%H:%M:%S'))
+                        self.daybox.setText(accounts[student_number][3])
+                        self.sembox.setText(accounts[student_number][4])
+                        self.aybox.setText(accounts[student_number][5])
                         break
                     else:
                         QMessageBox.about(self, "Does not exist", "Staffer does not exist")
