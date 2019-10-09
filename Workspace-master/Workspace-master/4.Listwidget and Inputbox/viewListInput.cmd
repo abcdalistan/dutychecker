@@ -1,0 +1,1 @@
+pyuic5 -x viewListInput.ui -o viewListInput.pyw

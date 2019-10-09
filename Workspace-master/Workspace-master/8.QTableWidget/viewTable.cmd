@@ -1,0 +1,1 @@
+pyuic5 -x viewTable.ui -o viewTable.pyw

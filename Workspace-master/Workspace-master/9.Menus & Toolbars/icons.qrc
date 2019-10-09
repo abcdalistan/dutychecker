@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="CRUD">
+    <file>icons/addNewRecord.png</file>
+    <file>icons/deleteRecord.png</file>
+    <file>icons/openRecord.png</file>
+    <file>icons/save.png</file>
+  </qresource>
+</RCC>

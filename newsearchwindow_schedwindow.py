@@ -7,10 +7,9 @@ class Ui_searchwindow(QMainWindow):
 
     def searchstaffer(self):
         conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
-        student_number=self.idbox.text()
-        last_name=self.lnamebox.text()
-        if (last_name==''):
-            QMessageBox.about(self, "Empty", "Input last name")
+        name=self.namebox.text()
+        if (name==''):
+            QMessageBox.about(self, "Empty", "Input first name")
             return
         with conn:
             cur=conn.cursor()
@@ -18,17 +17,19 @@ class Ui_searchwindow(QMainWindow):
             cur.execute(query)
             result = cur.fetchall()
             accounts = {}
-            for account_number in range(0, 5):
+            for account_number in range(0, 2):
                 accounts[result[account_number][0]] = result[account_number]
                 for student_number in accounts:
                     if (student_number in accounts):
-                        query = "SELECT * FROM stafferinfo where last_name= \"{}\"".format(last_name)
+                        query = "SELECT si.first_name from stafferinfo si inner join schedules s on si.student_number=s.student_number".format(name, self.idbox)
                         cur.execute(query)
                         result = cur.fetchone()
                         self.idbox.setText(result[0])
-                        self.fnamebox.setText(result[1])
-                        self.cbox.setText(result[3])
-                        self.posbox.setText(result[4])
+                        # self.tinbox.setText(result[1])
+                        # self.toutbox.setText(result[2])
+                        # self.daybox.setText(result[3])
+                        # self.sembox.setText(result[4])
+                        # self.aybox.setText(result[5])
                         break
                     else:
                         QMessageBox.about(self, "Does not exist", "Staffer does not exist")

@@ -75,9 +75,9 @@ class Ui_MainWindow(QMainWindow):
         item = self.ctable.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Program"))
         item = self.ctable.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Date"))
+        item.setText(_translate("MainWindow", "No of Duty Missed"))
         item = self.ctable.horizontalHeaderItem(5)
-        item.setText(_translate("MainWindow", "Fine"))
+        item.setText(_translate("MainWindow", "Total Fine"))
         self.exitbut.setText(_translate("MainWindow", "Exit"))
 import dutycheckerFiles_rc
 

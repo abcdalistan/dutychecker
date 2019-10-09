@@ -1,0 +1,1 @@
+pyuic5 -x viewRadChk.ui -o viewRadChk.pyw

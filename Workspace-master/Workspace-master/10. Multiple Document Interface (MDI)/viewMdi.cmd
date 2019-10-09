@@ -1,0 +1,1 @@
+pyuic5 -x viewMdi.ui -o viewMdi.pyw

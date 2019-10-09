@@ -3,49 +3,9 @@ from PyQt5.QtWidgets import *
 import pymysql
 from PyQt5.QtCore import QCoreApplication,Qt,QBasicTimer,QPoint
 from Newdutysched import Ui_MainWindow
+from newfinewindow import Ui_MainWindow as finewindow
 
 class Ui_viewwindow(QMainWindow):
-    # def cell_was_clicked(self, row, column):
-    #     self.row = row
-    #     return None
-
-    # def addTable(self,columns):
-    #     rowPosition=self.ctable.rowCount()
-    #     self.ctable.insertRow(rowPosition)
-    #     for i, column in enumerate(columns):
-    #         self.ctable.setItem(rowPosition,i, QtWidgets.QTableWidgetItem(str(column)))
-    #     return None
-
-    # def viewStaffer(self):
-    #     if self.flag:
-    #         conn = pymysql.connect('localhost', 'root', '', 'staffer')
-    #         with conn:
-    #             cur = conn.cursor()
-    #             query = ("SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls INNER JOIN stafferinfo si on ls.student_number=si.student_number")
-    #             cur.execute(query)
-    #             staffers = cur.fetchall()
-    #             print(staffers)
-    #             for row in staffers:
-    #                 self.addTable(row)
-    #             cur.close()
-    #         self.flag = 0
-    #     return None
-
-    # def refreshfunc(self):
-    #     self.ctable.setRowCount(0)
-    #     conn = pymysql.connect('localhost', 'root', '', 'staffer')
-    #     with conn:
-    #         cur=conn.cursor()
-    #         query=("SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls INNER JOIN stafferinfo si on ls.student_number=si.student_number WHERE ls.status = 0")
-    #         cur.execute(query)
-    #         result = cur.fetchall()
-    #         for row in result:
-    #             self.addTable(row)
-    #             cur.close()
-    #     return None
-    
-    #   NOT IN
-
     def cell_was_clicked(self, row, column):
         self.row = row
         return None
@@ -59,12 +19,10 @@ class Ui_viewwindow(QMainWindow):
 
     def viewStaffer(self):
         if self.flag:
-            conn = pymysql.connect('localhost', 'root', '', 'staffer')
+            conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
             with conn:
                 cur = conn.cursor()
-                query = """SELECT s.start_time, s.end_time, si.first_name, ls.status, ls.date FROM loginstaff ls 
-                INNER JOIN schedules s ON ls.student_number=s.student_number INNER JOIN stafferinfo si ON 
-                s.student_number=si.student_number WHERE ls.status = 'Done'"""
+                query = ("SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls INNER JOIN stafferinfo si on ls.student_number=si.student_number")
                 cur.execute(query)
                 staffers = cur.fetchall()
                 print(staffers)
@@ -74,14 +32,55 @@ class Ui_viewwindow(QMainWindow):
             self.flag = 0
         return None
 
+    def refreshfunc(self):
+        self.ctable.setRowCount(0)
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        with conn:
+            cur=conn.cursor()
+            query=("SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls INNER JOIN stafferinfo si on ls.student_number=si.student_number WHERE ls.status = 0")
+            cur.execute(query)
+            result = cur.fetchall()
+            for row in result:
+                self.addTable(row)
+                cur.close()
+        return None
+    
+      #NOT IN
+
+    def cell_was_clicked(self, row, column):
+        self.row = row
+        return None
+
+    def viewnotduty(self):
+        if self.flag1:
+            conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+            with conn:
+                cur = conn.cursor()
+                query = """SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls 
+                right join stafferinfo si on ls.student_number=si.student_number"""
+                cur.execute(query)
+                staffers = cur.fetchall()
+                for row in staffers:
+                    self.addTable(row)
+                cur.close()
+            self.flag1 = 0
+        return None
+
     def opensched(self):
         self.opensched = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.opensched)
         self.opensched.show()
 
+    def finewindow(self):
+        self.finewindow = QtWidgets.QMainWindow()
+        self.ui = finewindow()
+        self.ui.setupUi(self.finewindow)
+        self.finewindow.show()
+
     def setupUi(self, viewwindow):
         self.flag = 1
+        self.flag1=1
         viewwindow.setObjectName("viewwindow")
         viewwindow.resize(953, 627)
         viewwindow.setStyleSheet("background:transparent;")
@@ -126,6 +125,7 @@ class Ui_viewwindow(QMainWindow):
         self.Finebut.setFont(font)
         self.Finebut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
         self.Finebut.setObjectName("Finebut")
+        self.Finebut.clicked.connect(self.finewindow)
 
         self.schedbut = QtWidgets.QPushButton(self.centralwidget)
         self.schedbut.setGeometry(QtCore.QRect(70, 160, 151, 31))
@@ -161,6 +161,7 @@ class Ui_viewwindow(QMainWindow):
         self.notinbut.setFont(font)
         self.notinbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
         self.notinbut.setObjectName("notinbut")
+        self.notinbut.clicked.connect(self.viewnotduty)
 
         viewwindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(viewwindow)

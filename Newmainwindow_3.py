@@ -1,36 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox, QDesktopWidget, QLCDNumber
-from PyQt5.QtCore import QPoint, QTimer, QTime
-import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox, QDesktopWidget, QDesktopWidget
+from PyQt5.QtCore import QPoint
 import pymysql
 from Newlogin import Ui_adminlogin
 from datetime import datetime
 
 class Ui_MainWindow(QMainWindow): 
-
-    def stringToList(self, string):
-        tempList = string.rsplit(":")
-        for i in range(0, len(tempList)):
-            tempList[i] = int(tempList[i])
-        return tempList
-
-    def checkTime(self, time1, time2):
-        time1 = self.stringToList(time1)
-        time2 = self.stringToList(time2)
-        if time1[0] > time2[0]: # HOUR
-            return True
-        elif time1[0] == time2[0]: # IF HOUR1 == HOUR2
-            if time1[1] > time2[1]: # IF MINUTE1 > MINUTE2
-                return True
-            elif time1[1] == time2[1]: # IF MINUTE1 == MINUTE2
-                if time1[2] > time2[2]: # IF SECOND1 > SECOND2
-                    return True
-                else:
-                    return False
-            else:
-                return False
-        else:
-            return False
 
     def clear(self):
         self.namebox.setText("")
@@ -57,17 +32,8 @@ class Ui_MainWindow(QMainWindow):
                 self.posbox.setText(result[4])
                 self.time = datetime.now()
                 QMessageBox.about(self, "Login", result[1] +", you have successfully logged in!\nTime: {0}".format(self.displaytime()))
-                #self.checkTime(self.displaytime(), self.checkStartTime(student_number))
         return None
-
-    def checkStartTime(self, student_number):
-        conn = pymysql.connect("localhost", "root", "", "staffer")
-        with conn:
-            cursor = conn.cursor()
-            query = "SELECT start_time FROM schedules WHERE student_number = '{0}'".format(student_number)
-            cursor.execute(query)
-            return cursor.fetchone()
-
+        
     def exit(self):
         sys.exit()
         return None
@@ -96,7 +62,7 @@ class Ui_MainWindow(QMainWindow):
                     QMessageBox.about(self, "Login", "{0} already logged in!".format(student_number))
                 else:
                     self.login() # Invokes the login method
-                    cur.execute("INSERT INTO loginstaff (student_number, login_time, status, date) values (\"{0}\",\"{1}\", \"{2}\", \"{3}\")".format(student_number, current_time,'In duty' , current_date))
+                    cur.execute("INSERT INTO loginstaff (student_number, login_time, status, date) values (\"{0}\",\"{1}\", \"{2}\", \"{3}\")".format(student_number, current_time, 1, current_date))
             elif (self.idbox.text() == ""):
                 QMessageBox.about(self, "Empty", "Input student number")
                 self.clear()
@@ -124,61 +90,7 @@ class Ui_MainWindow(QMainWindow):
             else:
                 return 0
         return None
-
-    def logout(self):
-        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
-        student_number=self.idbox.text()
-        now = self.time = datetime.now()
-        current_time = now.strftime("%H:%M:%S")
-        with conn:
-            cur=conn.cursor()
-            query = "SELECT * FROM stafferinfo"
-            cur.execute(query)
-            result = cur.fetchall()
-            accounts = {}
-            for account_number in range(0, len(result)):
-                accounts[result[account_number][0]] = result[account_number]
-            if (student_number in accounts):
-                query = "SELECT * FROM stafferinfo where student_number= \"{}\"".format(student_number)
-                cur.execute(query)
-                result = cur.fetchone()
-                self.namebox.setText(" ".join([result[1], result[2]]))
-                self.programbox.setText(result[3])
-                self.posbox.setText(result[4])
-                self.time = datetime.now()
-                cur.execute("UPDATE loginstaff SET status='Done' where status='In duty'")
-                QMessageBox.about(self, "Logout", result[1] +", you have successfully logged out!\nTime: {0}".format(self.displaytime()))
-        return None
-
-    def loggedout(self):
-        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
-        student_number=self.idbox.text()
-        now = self.time = datetime.now()
-        current_date = now.strftime("%y-%m-%d")
-        current_time = now.strftime("%H:%M:%S")
-        with conn:
-            cur=conn.cursor()
-            query = "SELECT * FROM loginstaff"
-            cur.execute(query)
-            result = cur.fetchall()
-            accounts = {}
-            for account_number in range(0, len(result)):
-                accounts[result[account_number][0]] = result[account_number]
-            if (student_number in accounts): 
-                self.logout()
-                cur.execute("UPDATE loginstaff SET logout_time = '{0}' where student_number=\"{1}\"".format(current_time, student_number))
-                self.clear()
-            elif (self.idbox.text() == ""):
-                QMessageBox.about(self, "Empty", "Input student number")
-                self.clear()
-            elif (self.idbox.text().isalpha()):
-                QMessageBox.about(self, "Numbers only", "Positive integer numbers only")
-                self.clear()
-            else:
-                QMessageBox.about(self, "Does not exist", "Student number does not exist")
-                self.clear()
-        return None
-
+        
     def adminwindow(self):
         self.window = QtWidgets.QMainWindow()
         self.ui = Ui_adminlogin()
@@ -186,11 +98,12 @@ class Ui_MainWindow(QMainWindow):
         self.window.show()
 
     def setupUi(self, MainWindow):
+        self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(581, 641)
-        MainWindow.setStyleSheet("background:transparent;")
-        MainWindow.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-        MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        #MainWindow.setStyleSheet("background:transparent;")
+        #MainWindow.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        #MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
@@ -228,7 +141,6 @@ class Ui_MainWindow(QMainWindow):
         self.logoutbut.setFont(font)
         self.logoutbut.setStyleSheet("QPushButton {background-color: Black} QPushButton:hover {background-color:grey}QPushButton {border-radius:15px}QPushButton {color:White}QPushButton{border:2px solid yellow}QPushButton:pressed{Background-color:yellow};")
         self.logoutbut.setObjectName("logoutbut")
-        self.logoutbut.clicked.connect(self.loggedout)
 
         self.adminbut = QtWidgets.QPushButton(self.centralwidget)
         self.adminbut.setGeometry(QtCore.QRect(220, 510, 91, 31))
@@ -293,37 +205,9 @@ class Ui_MainWindow(QMainWindow):
         self.posbox.setStyleSheet("background:White")
         self.posbox.setObjectName("posbox")
 
-        self.timebox = QtWidgets.QLineEdit(self.centralwidget)
-        self.timebox.setGeometry(QtCore.QRect(118, 520, 91, 27))
-        font = QtGui.QFont()
-        font.setFamily("Nexa Light")
-        font.setPointSize(11)
-        font.setBold(True)
-        font.setWeight(75)
-        self.timebox.setFont(font)
-        self.timebox.setAlignment(QtCore.Qt.AlignCenter)
-        self.timebox.setReadOnly(True)
-        self.timebox.setStyleSheet("background:White")
-        self.timebox.setObjectName("timebox")
-
-
-        self.datebox = QtWidgets.QLineEdit(self.centralwidget)
-        self.datebox.setGeometry(QtCore.QRect(118, 550, 91, 27))
-        font = QtGui.QFont()
-        font.setFamily("Nexa Light")
-        font.setPointSize(11)
-        font.setBold(True)
-        font.setWeight(75)
-        self.datebox.setFont(font)
-        self.datebox.setAlignment(QtCore.Qt.AlignCenter)
-        self.datebox.setReadOnly(True)
-        self.datebox.setStyleSheet("background:White")
-        self.datebox.setObjectName("datebox")
-
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(20, -20, 521, 641))
         self.label.setObjectName("label")
-
         self.Time = QtWidgets.QLabel(self.centralwidget)
         self.Time.setGeometry(QtCore.QRect(75, 520, 71, 31))
         font = QtGui.QFont()
@@ -346,8 +230,6 @@ class Ui_MainWindow(QMainWindow):
         self.Date.setStyleSheet("color: rgb(255, 255, 0);")
         self.Date.setObjectName("Date")
         self.label.raise_()
-        self.timebox.raise_()
-        self.datebox.raise_()
         self.namebox.raise_()
         self.programbox.raise_()
         self.posbox.raise_()
@@ -360,10 +242,23 @@ class Ui_MainWindow(QMainWindow):
         self.exitbut.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
 
+        MainWindow.keyPressEvent = self.defineKeyPressEvent  
+
+        MainWindow.mousePressEvent = self.mousePressEvent  
+        MainWindow.mouseMoveEvent = self.mouseMoveEvent
         
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        MainWindow.mouseMoveEvent = self.mouseMoveEvent
+        MainWindow.mousePressEvent = self.mousePressEvent
+
+        self.oldPos = MainWindow.pos()
+
+        qr = MainWindow.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        MainWindow.move(qr.topLeft())
 
     def defineKeyPressEvent(self, e):
         if e.key() == QtCore.Qt.Key_Return:
@@ -376,8 +271,8 @@ class Ui_MainWindow(QMainWindow):
 
     def mouseMoveEvent(self, event):
         delta = QPoint (event.globalPos() - self.oldPos)
-        #print(delta)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
+        print(delta.x(), delta.y())
+        self.MainWindow.move(self.MainWindow.x() + delta.x(), self.MainWindow.y() + delta.y())
         self.oldPos = event.globalPos()
 
     def retranslateUi(self, MainWindow):
@@ -391,7 +286,6 @@ class Ui_MainWindow(QMainWindow):
         self.loginbut.setText(_translate("MainWindow", "Login"))
         self.logoutbut.setText(_translate("MainWindow", "Logout"))
         self.exitbut.setText(_translate("MainWindow","Exit"))
-        #self.timebox.setText(_translate("MainWindow"))
         self.label.setText(_translate("MainWindow", "<html><head/><body><p><img src=\":/login/Pics/Main-window.png\"width=561 height=641/></p></body></html>"))
         self.Time.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt;\">TIME:</span></p></body></html>"))
         self.Date.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt;\">DATE:</span></p></body></html>"))

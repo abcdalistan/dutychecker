@@ -14,7 +14,7 @@ class Ui_addwindow(QMainWindow):
             day= self.daybox.text()
             sem=self.sembox.text()
             acadyear=self.aybox.text()
-            if (student_number=='' or first_name=='' or start_time=='' or end_time=='' or day=='' or acadyear=='' or sem==''):
+            if (student_number=='' or start_time=='' or end_time=='' or day=='' or acadyear=='' or sem==''):
                 QMessageBox.about(self, 'Warning!', "Please fill up all information")
                 return
             with conn:

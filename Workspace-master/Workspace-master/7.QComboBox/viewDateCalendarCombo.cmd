@@ -1,0 +1,1 @@
+pyuic5 -x viewDateCalendarCombo.ui -o viewDateCalendarCombo.pyw
