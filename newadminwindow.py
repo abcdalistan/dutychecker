@@ -8,7 +8,6 @@ from newupdate import Ui_updatewindow as updatewindow
 from PyQt5.QtCore import QCoreApplication,Qt,QBasicTimer,QPoint
 
 class Ui_MainWindow(QMainWindow):
-
     def cell_was_clicked(self, row, column):
         self.row = row
 
@@ -69,7 +68,7 @@ class Ui_MainWindow(QMainWindow):
             answer = QMessageBox.question(self, "", "Are you sure you want to delete student number '{0}'".format(self.tableWidget.item(self.row, 0).text()))
             if answer == QMessageBox.Yes:
                 try:
-                    conn = pymysql.connect("localhost", "root", "", "staffer")
+                    conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
                     with conn:
                         cur = conn.cursor()
                         query = "DELETE FROM stafferinfo WHERE student_number = \'{0}\'".format(self.tableWidget.item(self.row, 0).text())
@@ -84,7 +83,7 @@ class Ui_MainWindow(QMainWindow):
                 return
         except:
             pass
-
+            
     def openUpdateWindow(self):
         try:
             cell_student_number = self.tableWidget.item(self.row, 0).text()
@@ -237,6 +236,8 @@ class Ui_MainWindow(QMainWindow):
     def defineKeyPressEvent(self, e):
         if e.key() == QtCore.Qt.Key_Delete:
             self.deleteClicked()
+        if e.key() == QtCore.Qt.Key_F5:
+            self.refreshfunc()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

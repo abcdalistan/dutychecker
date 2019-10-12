@@ -6,6 +6,9 @@ from Newdutysched import Ui_MainWindow
 from newfinewindow import Ui_MainWindow as finewindow
 
 class Ui_viewwindow(QMainWindow):
+    def clear(self):
+        self.ctable.setRowCount(0)
+
     def cell_was_clicked(self, row, column):
         self.row = row
         return None
@@ -56,6 +59,7 @@ class Ui_viewwindow(QMainWindow):
             conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
             with conn:
                 cur = conn.cursor()
+                self.clear()
                 query = """SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls 
                 right join stafferinfo si on ls.student_number=si.student_number"""
                 cur.execute(query)

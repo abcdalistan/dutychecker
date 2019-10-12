@@ -13,8 +13,8 @@ class Ui_searchwindow(QMainWindow):
 
         with conn:
             cur=conn.cursor()
-            query = "SELECT * FROM schedules"
-            cur.execute(query)
+            
+            cur.execute("CALL `staffer`.`searcrh`();")
             result = cur.fetchall()
             accounts = {}
             for account_number in range(0, 2):
@@ -166,7 +166,7 @@ class Ui_searchwindow(QMainWindow):
 
         self.retranslateUi(searchwindow)
         QtCore.QMetaObject.connectSlotsByName(searchwindow)
-
+        
     def retranslateUi(self, searchwindow):
         _translate = QtCore.QCoreApplication.translate
         searchwindow.setWindowTitle(_translate("searchwindow", "MainWindow"))
