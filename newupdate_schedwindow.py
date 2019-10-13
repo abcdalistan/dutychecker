@@ -9,8 +9,8 @@ class Ui_updatewindow(QMainWindow):
             conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
             cur = conn.cursor()
             student_number = self.idbox.text()
-            query = "SELECT * FROM schedules"
-            cur.execute(query)
+            
+            cur.execute("CALL `staffer`.`update`();")
             result = cur.fetchall()
             accounts = {}
             for account_number in range(0, len(result)):

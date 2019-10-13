@@ -200,6 +200,7 @@ class Ui_MainWindow(QMainWindow):
         self.exitbut.setObjectName("exitbut")
         self.exitbut.clicked.connect(lambda closeFunction: MainWindow.close())
 
+    
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")

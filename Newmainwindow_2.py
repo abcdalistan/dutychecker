@@ -76,7 +76,7 @@ class Ui_MainWindow(QMainWindow):
         return "{0}:{1}:{2}".format(self.time.hour, self.time.minute, self.time.second)
 
     def loggedin(self):
-        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        conn = pymysql.connect('localhost', 'root', '', 'staffer')
         student_number=self.idbox.text()
         now = self.time = datetime.now()
         current_date = now.strftime("%y-%m-%d")

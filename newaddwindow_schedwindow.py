@@ -146,13 +146,19 @@ class Ui_addwindow(QMainWindow):
         self.exitbut.setObjectName("exitbut")
         self.exitbut.clicked.connect(lambda closeFunction: addwindow.close())
 
+        addwindow.keyPressEvent = (self.defineKeyPressEvent)
         addwindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(addwindow)
         self.statusbar.setObjectName("statusbar")
         addwindow.setStatusBar(self.statusbar)
-
         self.retranslateUi(addwindow)
         QtCore.QMetaObject.connectSlotsByName(addwindow)
+
+    def defineKeyPressEvent(self, e):
+        if e.key() == QtCore.Qt.Key_Return:
+            self.addStaffer()
+        if e.key() == QtCore.Qt.Key_Enter:
+            self.addStaffer()
 
     def retranslateUi(self, addwindow):
         _translate = QtCore.QCoreApplication.translate
