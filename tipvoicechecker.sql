@@ -15,6 +15,7 @@ ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS `staffer`.`schedules` ;
 CREATE TABLE IF NOT EXISTS `staffer`.`schedules` (
+  `schedule_ID` int not NULL primary key auto_increment,
   `student_number` varchar(45) NOT NULL ,
   `start_time` time not NULL,
   `end_time` time not NULL,
@@ -27,10 +28,11 @@ ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS `staffer`.`fine` ;
 CREATE TABLE IF NOT EXISTS `staffer`.`fine` (
-  `fine_ID` int ,
   `no_of_duty` int null ,
-  `total_fine` decimal NULL,
-  primary key (`fine_ID`))
+  `total_fine` decimal null,
+  `student_number` varchar (50) not null,
+  foreign key (`student_number`) references `stafferinfo`(`student_number`)
+)
 ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS `staffer`.`loginstaff` ;
@@ -38,11 +40,9 @@ CREATE TABLE IF NOT EXISTS `staffer`.`loginstaff` (
   `student_number` varchar(50) NOT NULL ,
   `login_time` time NULL,
   `logout_time` time NULL,
-  `status` varchar(45) NULL,
+  `day` varchar(45) NULL,
   `date` date NULL,
-  `fine_ID` int NULL, 
-  foreign key (`student_number`) references `stafferinfo`(`student_number`),
-  foreign key (`fine_ID`) references `fine`(`fine_ID`)
+  foreign key (`student_number`) references `stafferinfo`(`student_number`)
   )
 ENGINE = InnoDB;
 
