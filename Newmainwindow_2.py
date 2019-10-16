@@ -7,30 +7,31 @@ from Newlogin import Ui_adminlogin
 from datetime import datetime, date
 import calendar
 
-class Ui_MainWindow(QMainWindow): 
-    # def stringToList(self, string):
-    #     tempList = string.rsplit(":")
-    #     for i in range(0, len(tempList)):
-    #         tempList[i] = int(tempList[i])
-    #     return tempList
+class Ui_MainWindow(QMainWindow):
+    
+    def stringToList(self, string):
+        tempList = string.rsplit(":")
+        for i in range(0, len(tempList)):
+            tempList[i] = int(tempList[i])
+        return tempList
 
-    # def checkTime(self, time1, time2):
-    #     time1 = self.stringToList(time1)
-    #     time2 = self.stringToList(time2)
-    #     if time1[0] > time2[0]: # HOUR
-    #         return True
-    #     elif time1[0] == time2[0]: # IF HOUR1 == HOUR2
-    #         if time1[1] > time2[1]: # IF MINUTE1 > MINUTE2
-    #             return True
-    #         elif time1[1] == time2[1]: # IF MINUTE1 == MINUTE2
-    #             if time1[2] > time2[2]: # IF SECOND1 > SECOND2
-    #                 return True
-    #             else:
-    #                 return False
-    #         else:
-    #             return False
-    #     else:
-    #         return False
+    def checkTime(self, time1, time2):
+         time1 = self.stringToList(time1)
+         time2 = self.stringToList(time2)
+         if time1[0] > time2[0]: # HOUR
+             return True
+         elif time1[0] == time2[0]: # IF HOUR1 == HOUR2
+             if time1[1] > time2[1]: # IF MINUTE1 > MINUTE2
+                 return True
+             elif time1[1] == time2[1]: # IF MINUTE1 == MINUTE2
+                 if time1[2] > time2[2]: # IF SECOND1 > SECOND2
+                     return True
+                 else:
+                     return False
+             else:
+                 return False
+         else:
+             return False
 
     def clear(self):
         self.namebox.setText("")
@@ -38,7 +39,7 @@ class Ui_MainWindow(QMainWindow):
         self.posbox.setText("")
 
     def login(self):
-        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
         with conn:
             cur=conn.cursor()
@@ -55,28 +56,35 @@ class Ui_MainWindow(QMainWindow):
                 self.programbox.setText(result[3])
                 self.posbox.setText(result[4])
                 self.time = datetime.now()
-                QMessageBox.about(self, "Login", result[1] +", you have successfully logged in!\nTime: {0}".format(self.displaytime()))
-                #self.checkTime(self.displaytime(), self.checkStartTime(student_number))
+                QMessageBox.about(self, "Login", result[1] +", you have successfully logged in!\nTime: {0}".format(self.gettime()))
         return None
 
-    # def checkStartTime(self, student_number):
-    #     conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
-    #     with conn:
-    #         cursor = conn.cursor()
-           
-    #         cursor.execute("CALL `staffer`.`starttime`();")
-    #         return cursor.fetchone()
+    def checkStartTime(self, student_number):
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+        with conn:
+            cursor = conn.cursor()
+            query = "SELECT start_time FROM schedules WHERE student_number = '{0}'".format(student_number)
+            cursor.execute(query)
+            conn.commit()
+            cursor.close()
+            return ((datetime.min + cursor.fetchone()[0]).time().strftime("%H:%M:%S"))
 
     def exit(self):
         sys.exit()
         return None
 
-    def displaytime(self):
+    def gettime(self):
         self.time = datetime.now()
-        return "{0}:{1}:{2}".format(self.time.hour, self.time.minute, self.time.second)
+        tformat = [self.time.hour, self.time.minute, self.time.second]
+        string = ""
+        for index in range(0, len(tformat)):
+            tformat[index] = str(tformat[index])
+        for index in range(0, len(tformat)):
+            tformat[index] = tformat[index].zfill(2)
+        return ":".join(tformat)
 
     def loggedin(self):
-        conn = pymysql.connect('localhost', 'root', '', 'staffer')
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
         now = self.time = datetime.now()
         current_date = now.strftime("%y-%m-%d")
@@ -89,27 +97,29 @@ class Ui_MainWindow(QMainWindow):
             for account_number in range(0, len(result)):
                 accounts[result[account_number][0]] = result[account_number]
             if (student_number in accounts):
+                
                 if self.checkDaySched( self.getDayToday(), student_number):
-                    if self.checkDay(student_number) == self.getDayToday() or self.checkDay(student_number) == None:
+                    
+                    if self.checkDay(student_number) == self.getDayToday() or self.checkDay(student_number ) == None:
+
                         self.updateDay(student_number, self.nextDay(self.getDayToday()))
                         self.login()
-                        cur.execute("""UPDATE loginstaff
-                                    SET login_time = '{0}', date = '{1}'
-                                    WHERE student_number = '{2}' 
-                                    """.format(current_time, current_date, student_number))
+
+                        if not self.checkTime(self.gettime(), self.checkStartTime(student_number)):
+                            cur.execute("""UPDATE loginstaff
+                                        SET login_time = '{0}', date = '{1}', status = 'In duty'
+                                        WHERE student_number = '{2}' 
+                                        """.format(current_time, current_date, student_number))
+                            
+                        else:
+                            cur.execute("""UPDATE loginstaff
+                                        SET login_time = '{0}', date = '{1}', status = 'Late'
+                                        WHERE student_number = '{2}' 
+                                        """.format(current_time, current_date, student_number))
                     else:
                         QMessageBox.about(self, "Login", "'{0}' already logged in!".format(student_number))
                 else:
                     QMessageBox.about(self, "Login", "'{0}' does not have any schedule on '{1}'".format(student_number, self.getDayToday()))
-
-##                self.checkStaffer('1810972')
-##                # Checks if the student number exists in the loginstaff table, otherwise, insert a new one
-##                if self.checkStaffer(student_number):
-##                    QMessageBox.about(self, "Login", "{0} already logged in!".format(student_number))
-##                else:
-##                    self.login() # Invokes the login method
-##                    
-##                    cur.execute("INSERT INTO loginstaff (student_number, login_time, day, date) values (\"{0}\",\"{1}\", \"{2}\", \"{3}\")".format(student_number, current_time, "Monday", current_date))
             
             elif (self.idbox.text() == ""):
                 QMessageBox.about(self, "Empty", "Input student number")
@@ -133,7 +143,7 @@ class Ui_MainWindow(QMainWindow):
     # Day today - Sunday
     # 1810972 - [Monday, Tuesday, Wednesday]
     def checkDaySched(self, day, student_number):
-        conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         with conn:
             cur = conn.cursor()
             query = "SELECT day FROM schedules WHERE student_number = '{0}'".format(student_number)
@@ -172,7 +182,7 @@ class Ui_MainWindow(QMainWindow):
 
     # Updates the day of staffer
     def updateDay (self, student_number, day):
-        conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         with conn:
             cur = conn.cursor()
             query = "UPDATE loginstaff SET day = '{0}' WHERE student_number = '{1}'".format(day, student_number)
@@ -182,7 +192,7 @@ class Ui_MainWindow(QMainWindow):
 
     # Returns the day column of a certain staffer in the databse table, loginstaff
     def checkDay(self, student_number):
-        conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         with conn:
             cur = conn.cursor()
             query = "SELECT day FROM loginstaff WHERE student_number = '{0}'".format(student_number)
@@ -194,7 +204,7 @@ class Ui_MainWindow(QMainWindow):
 
     # Logout method
     def logout(self):
-        conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
         now = self.time = datetime.now()
         current_time = now.strftime("%H:%M:%S")
@@ -207,7 +217,6 @@ class Ui_MainWindow(QMainWindow):
             for account_number in range(0, len(result)):
                 accounts[result[account_number][0]] = result[account_number]
             if (student_number in accounts):
-                
                 query = "SELECT * FROM stafferinfo where student_number= \"{}\"".format(student_number)
                 cur.execute(query)
                 result = cur.fetchone()
@@ -215,20 +224,19 @@ class Ui_MainWindow(QMainWindow):
                 self.programbox.setText(result[3])
                 self.posbox.setText(result[4])
                 self.time = datetime.now()
-                #cur.execute("UPDATE loginstaff SET status='Done' where status='In duty'")
-                QMessageBox.about(self, "Logout", result[1] +", you have successfully logged out!\nTime: {0}".format(self.displaytime()))
+                cur.execute("UPDATE loginstaff SET status='Done' where status='In duty' or status='Late'")
+                QMessageBox.about(self, "Logout", result[1] +", you have successfully logged out!\nTime: {0}".format(self.gettime()))
         return None
 
     def loggedout(self):
-        conn = pymysql.connect("localhost", "tipvoice", "password", "staffer")
+        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
         student_number=self.idbox.text()
         now = self.time = datetime.now()
         current_date = now.strftime("%y-%m-%d")
         current_time = now.strftime("%H:%M:%S")
         with conn:
             cur=conn.cursor()
-            
-            cur.execute("CALL `staffer`.`logout`();")
+            cur.execute("SELECT * FROM loginstaff")
             result = cur.fetchall()
             accounts = {}
             for account_number in range(0, len(result)):
@@ -442,7 +450,6 @@ class Ui_MainWindow(QMainWindow):
         
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
 
     def defineKeyPressEvent(self, e):
         if e.key() == QtCore.Qt.Key_Return:
