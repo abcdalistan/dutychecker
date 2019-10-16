@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `staffer`.`loginstaff` (
   `logout_time` time NULL,
   `day` varchar(45) NULL,
   `date` date NULL,
+  `status` varchar(45) NULL,
   foreign key (`student_number`) references `stafferinfo`(`student_number`)
   )
 ENGINE = InnoDB;
