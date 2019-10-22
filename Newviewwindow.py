@@ -26,7 +26,9 @@ class Ui_viewwindow(QMainWindow):
             conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
             with conn:
                 cur = conn.cursor()
-                query = ("SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls INNER JOIN stafferinfo si on ls.student_number=si.student_number")
+                query = """SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls 
+                inner join stafferinfo si on ls.student_number=si.student_number where ls.status='Late' or ls.status='In duty' or ls.status='Done'"""
+                
                 cur.execute(query)
                 staffers = cur.fetchall()
                 for row in staffers:
@@ -34,18 +36,18 @@ class Ui_viewwindow(QMainWindow):
                 cur.close()
             self.flag = 0
 
-    def refreshfunc(self):
+    # def refreshfunc(self):
         
-        self.ctable.setRowCount(0)
-        conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
-        with conn:
-            cur=conn.cursor()
-            query=("SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls INNER JOIN stafferinfo si on ls.student_number=si.student_number WHERE ls.status = 0")
-            cur.execute(query)
-            result = cur.fetchall()
-            for row in result:
-                self.addTable(row)
-                cur.close()
+    #     self.ctable.setRowCount(0)
+    #     conn = pymysql.connect('localhost', 'tipvoice', 'password', 'staffer')
+    #     with conn:
+    #         cur=conn.cursor()
+    #         query=("SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls INNER JOIN stafferinfo si on ls.student_number=si.student_number WHERE ls.status = 0")
+    #         cur.execute(query)
+    #         result = cur.fetchall()
+    #         for row in result:
+    #             self.addTable(row)
+    #             cur.close()
                 
     def cell_was_clicked(self, row, column):
         self.row = row
@@ -56,8 +58,7 @@ class Ui_viewwindow(QMainWindow):
             with conn:
                 cur = conn.cursor()
                 self.clear()
-                query = """SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls 
-                inner join stafferinfo si on ls.student_number=si.student_number where ls.status='Late'"""
+                query = ("SELECT ls.login_time, ls.logout_time, si.first_name, ls.status, ls.date FROM loginstaff ls INNER JOIN stafferinfo si on ls.student_number=si.student_number")
                 cur.execute(query)
                 staffers = cur.fetchall()
                 for row in staffers:

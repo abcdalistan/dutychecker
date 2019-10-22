@@ -224,7 +224,7 @@ class Ui_MainWindow(QMainWindow):
                 self.programbox.setText(result[3])
                 self.posbox.setText(result[4])
                 self.time = datetime.now()
-                cur.execute("UPDATE loginstaff SET status='Done' where status='In duty' or status='Late'")
+                cur.execute("update loginstaff set status='Done' where student_number= \"{}\"".format(student_number))
                 QMessageBox.about(self, "Logout", result[1] +", you have successfully logged out!\nTime: {0}".format(self.gettime()))
         return None
 
